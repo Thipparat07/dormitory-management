@@ -1,0 +1,167 @@
+.navbar {
+  background-color: #f13d2f;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box;
+  padding: 0 80px; /* Reduced padding from 160px */
+}
+
+.navbar-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.bill-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.close-btn {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  gap: 5px;
+
+  &:hover {
+    opacity: 0.8;
+
+    .material-symbols-outlined {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.details-container {
+  padding-top: 100px; /* Space for navbar + some margin */
+  padding-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background-color: #fcfcfc;
+  min-height: 100vh;
+}
+
+.status-card,
+.details-table-card {
+  width: 800px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #eee;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.status-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px; /* Approximate height from image */
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .status-warning {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    span {
+      font-weight: bold;
+    }
+
+    &.pending {
+      color: #ffb800;
+    }
+
+    &.overdue {
+      color: #ff4d4f;
+    }
+
+    &.paid {
+      color: #52c41a;
+    }
+  }
+}
+
+.details-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+
+  th {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .item-col {
+    width: 70%;
+  }
+
+  .amount-col {
+    width: 30%;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .total-row td {
+    font-weight: 600;
+  }
+}
+
+.reminder-card {
+  width: 800px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #eee;
+  padding: 15px 20px;
+  box-sizing: border-box;
+  color: #333;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.action-btn-container {
+  width: 800px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+
+  .notify-payment-btn {
+    background-color: #32cd32; /* Lime Green */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #28a428;
+    }
+  }
+}

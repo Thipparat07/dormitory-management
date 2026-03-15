@@ -1,0 +1,107 @@
+<app-header-owner [dormId]="dormId" activeTab="meter"></app-header-owner>
+
+<div class="main-content">
+  <div class="meter-recording-container">
+
+    <!-- Loading overlay -->
+    <div *ngIf="isLoading" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Guidance Banner (Preserved Horganice Logic with Original Style) -->
+    <div class="init-notice-banner" *ngIf="!isLoading && isFirstTimeSetup">
+      <span class="material-symbols-outlined icon">info</span>
+      <div class="notice-text">
+        <strong>สำหรับการใช้งานครั้งแรก:</strong>
+        จำเป็นต้องกรอกมิเตอร์ย้อนหลัง 1 เดือน เพื่อสร้างเลขตั้งต้นครับ
+        <span class="example-text">
+            ตัวอย่าง: ต้องการทำบิลเดือน <strong>{{ currentMonth }}</strong> 
+            ให้คลิกเลือกปฏิทินย้อนไปกรอกเลขมิเตอร์เดือน <strong>{{ prevMonth }}</strong> ก่อน 
+            (กรอกที่ช่องเลขมิเตอร์ปัจจุบันของเดือนนั้น)
+        </span>
+      </div>
+    </div>
+
+    <!-- Date Picker (Original Style) -->
+    <div class="date-header">
+      <label class="date-picker-box">
+        <span class="material-symbols-outlined icon">calendar_today</span>
+        <span class="date-text">{{ getFormattedMonth() }}</span>
+        <input type="month" class="hidden-date-input" [(ngModel)]="selectedMonth" (ngModelChange)="onMonthChange()"
+          [min]="minMonth" [max]="maxMonth">
+      </label>
+    </div>
+
+    <!-- Tabs (Original Rectangular Style) -->
+    <div class="tabs-container">
+      <div class="tab water-tab" [class.active]="selectedTab === 'water'" (click)="selectTab('water')">
+        จดมิเตอร์น้ำ
+      </div>
+      <div class="tab electric-tab" [class.active]="selectedTab === 'electric'" (click)="selectTab('electric')">
+        จดมิเตอร์ไฟฟ้า
+      </div>
+    </div>
+
+    <!-- Floor Tables (Original White Style matching Image 1988) -->
+    <div class="floors-container">
+      <div class="floor-card" *ngFor="let floor of currentData">
+        <h3 class="floor-title">ชั้นที่ {{ floor.number }}</h3>
+
+        <div class="table-responsive">
+          <table class="meter-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">ห้อง</th>
+                <th style="width: 100px;">สถานะห้อง</th>
+                <th>เลขมิเตอร์เดือน ( {{ prevMonth }} )</th>
+                <th>
+                    <span *ngIf="selectedTab === 'water'">💧</span>
+                    <span *ngIf="selectedTab === 'electric'">⚡</span>
+                    เลขมิเตอร์เดือน ( {{ currentMonth }} )
+                </th>
+                <th style="width: 120px;">หน่วยที่ใช้</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let room of floor.rooms">
+                <td class="fw-bold">{{ room.number }}</td>
+                <td>
+                  <span class="material-symbols-outlined person-icon" *ngIf="room.occupied">person</span>
+                </td>
+                <td class="prev-meter-cell fw-bold">
+                    {{ room.prevMeter }}
+                </td>
+                <td class="current-meter-cell">
+                  <div class="input-with-icon">
+                    <span class="material-symbols-outlined field-icon" *ngIf="selectedTab === 'water'">water_drop</span>
+                    <span class="material-symbols-outlined field-icon" *ngIf="selectedTab === 'electric'">bolt</span>
+                    <input type="number" [id]="'input-' + selectedTab + '-current-' + room.id"
+                      [(ngModel)]="room.currentMeter" (ngModelChange)="onReadingChange(room)"
+                      (keydown.enter)="onEnterKey(room, selectedTab, 'current')" class="meter-input">
+                  </div>
+                </td>
+                <td class="units-cell fw-bold">
+                  {{ getUnitsUsed(room) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Action Footer (Original Simple Logic) -->
+      <div class="action-footer" *ngIf="!isLoading && anyChanges()">
+        <button class="btn-save" (click)="saveAll()">
+          บันทึกข้อมูล
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && currentData.length === 0" class="no-data">
+      <span class="material-symbols-outlined">info</span>
+      <p>ไม่พบข้อมูลห้องพัก</p>
+    </div>
+
+  </div>
+</div>

@@ -28,6 +28,11 @@
             <span class="material-symbols-outlined">receipt_long</span>
             บิลค่าเช่า
           </a>
+          <a [routerLink]="['/owner/dormitory', dormId, 'meter-reading']" class="nav-item"
+            [class.active]="activeTab === 'meter'" (click)="closeMobileMenu()">
+            <span class="material-symbols-outlined">speed</span>
+            จดมิเตอร์
+          </a>
           <div class="nav-item-dropdown" [class.active]="isSettingsMenuOpen">
             <div class="dropdown-trigger" (click)="toggleSettingsMenu()">
               <span class="nav-item" [class.active]="activeTab === 'settings'">
@@ -60,6 +65,11 @@
                 (click)="closeMobileMenu()">
                 <span class="material-symbols-outlined">category</span>
                 จัดการประเภทห้อง
+              </div>
+              <div class="menu-item" [routerLink]="['/owner/dormitory', dormId, 'utility-rates']"
+                (click)="closeMobileMenu()">
+                <span class="material-symbols-outlined">bolt</span>
+                ค่าน้ำ - ค่าไฟ - ค่าบริการอื่นๆ
               </div>
             </div>
           </div>

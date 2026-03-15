@@ -98,4 +98,40 @@ export class Dormitory {
       { withCredentials: true }
     );
   }
+  
+  getUtility(dormitoryId: number | string): Observable<any> {
+    return this.http.get<any>(
+      `${this.constants.API_ENDPOINT}/api/dormitories/${dormitoryId}/utilities`,
+      { withCredentials: true }
+    );
+  }
+
+  updateUtility(dormitoryId: number | string, payload: { water_rate: number, electricity_rate: number }): Observable<any> {
+    return this.http.post<any>(
+      `${this.constants.API_ENDPOINT}/api/dormitories/${dormitoryId}/utilities`,
+      payload,
+      { withCredentials: true }
+    );
+  }
+
+  updateFurnitureFee(dormitoryId: number | string, roomIds: number[], furnitureFee: number): Observable<any> {
+    return this.http.put<any>(
+      `${this.constants.API_ENDPOINT}/api/dormitories/${dormitoryId}/rooms/furniture-fee`,
+      { room_ids: roomIds, furniture_fee: furnitureFee },
+      { withCredentials: true }
+    );
+  }
+
+  recordMeterReading(dormitoryId: number | string, payload: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.constants.API_ENDPOINT}/api/bills/${dormitoryId}/meter-readings`,
+      payload,
+      { withCredentials: true }
+    );
+  }
+
+  getMeterReadings(dormitoryId: number | string, monthYear?: string): Observable<any> {
+    const url = `${this.constants.API_ENDPOINT}/api/bills/${dormitoryId}/meter-readings${monthYear ? `?month_year=${monthYear}` : ''}`;
+    return this.http.get<any>(url, { withCredentials: true });
+  }
 }

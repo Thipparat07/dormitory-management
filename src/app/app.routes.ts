@@ -18,6 +18,8 @@ import { RoomBooking } from './page/dormitory-and-rooms/room-booking/room-bookin
 import { RoomTypeManagement } from './page/dormitory-and-rooms/room-type-management/room-type-management';
 import { RoomTenantDetails } from './page/dormitory-and-rooms/room-tenant-details/room-tenant-details';
 import { OwnerBankAccount } from './page/owner-settings/owner-bank-account/owner-bank-account';
+import { WaterElectricity } from './page/water-electricity/water-electricity';
+import { WriteDownTheMeter } from './page/write-down-the-meter/write-down-the-meter';
 
 // Tenant - Billing & Payments
 import { Billing } from './page/billing-and-payments/billing/billing';
@@ -65,6 +67,8 @@ export const routes: Routes = [
                     { path: 'room-booking', component: RoomBooking },
                     { path: 'room-types', component: RoomTypeManagement },
                     { path: 'bank-account', component: OwnerBankAccount },
+                    { path: 'utility-rates', component: WaterElectricity },
+                    { path: 'meter-reading', component: WriteDownTheMeter },
                     { path: 'room-details/:roomId', component: RoomTenantDetails },
                 ]
             },

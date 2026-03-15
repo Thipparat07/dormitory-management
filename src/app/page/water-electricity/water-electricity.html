@@ -1,0 +1,143 @@
+<app-header-owner [dormId]="dormId" activeTab="settings"></app-header-owner>
+
+<div class="main-container">
+  <!-- Show Loading state -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>กำลังโหลดข้อมูล...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+    <div class="content-container">
+      <div class="page-title-section">
+        <h2>ค่าน้ำ / ค่าไฟ / ค่าบริการอื่นๆ</h2>
+      </div>
+
+      <!-- Search and Filter -->
+      <div class="filter-section">
+        <div class="filter-controls">
+          <div class="search-box">
+            <span class="material-symbols-outlined search-icon">search</span>
+            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="ค้นหาตามหมายเลขห้อง">
+          </div>
+
+          <div class="dropdown-box">
+            <select title="ค้นหาชั้น" [(ngModel)]="selectedFloorFilter" (ngModelChange)="applyFilters()">
+              <option value="all">ชั้นทั้งหมด</option>
+              <option *ngFor="let floor of floors" [value]="floor.number">ชั้นที่ {{ floor.number }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="select-all-bar row-layout">
+          <label class="custom-checkbox">
+            <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()">
+            <span class="checkmark"></span>
+            เลือกทั้งหมด เพื่อกำหนดค่าบริการ
+          </label>
+          <div class="assign-action-group">
+            <button class="btn btn-water" (click)="openConfigModal('water', 'bulk')">กำหนดค่าน้ำ</button>
+            <button class="btn btn-electric" (click)="openConfigModal('electric', 'bulk')">กำหนดค่าไฟ</button>
+            <button class="btn btn-furniture" (click)="openConfigModal('furniture', 'bulk')">กำหนดค่าเฟอร์นิเจอร์</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floor Sections -->
+      <div class="floor-container" *ngFor="let floor of filteredFloors">
+        <div class="floor-header">
+          <h3 class="floor-title">ชั้นที่ {{ floor.number }}</h3>
+          <div class="floor-actions">
+            <button class="btn btn-select-floor" (click)="selectFloor(floor)">เลือกทั้งชั้น</button>
+            <button class="btn btn-deselect-floor" (click)="deselectFloor(floor)">ไม่เลือก</button>
+          </div>
+        </div>
+
+        <div class="rooms-grid">
+          <div class="room-wrapper" *ngFor="let room of floor.rooms">
+            <div class="room-number">{{ room.number }}</div>
+            <div class="room-card" [class.selected]="room.selected" (click)="toggleRoomSelection(room)">
+              <div class="card-half" (click)="$event.stopPropagation(); openConfigModal('water', room)">
+                <div class="rate-type blue-text">ค่าน้ำ</div>
+                <div class="rate-price">{{ room.waterPrice }} บาท/ยูนิต</div>
+              </div>
+              <div class="card-separator"></div>
+              <div class="card-half" (click)="$event.stopPropagation(); openConfigModal('electric', room)">
+                <div class="rate-type red-text">ค่าไฟ</div>
+                <div class="rate-price">{{ room.electricPrice }} บาท/ยูนิต</div>
+              </div>
+              <div class="card-separator"></div>
+              <div class="card-half" (click)="$event.stopPropagation(); openConfigModal('furniture', room)">
+                <div class="rate-type orange-text">ค่าเฟอร์นิเจอร์</div>
+                <div class="rate-price">{{ room.furnitureFee | number }} บาท/เดือน</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="filteredFloors.length === 0" class="no-results">
+        ไม่พบข้อมูลห้องพัก
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<!-- Config Modal -->
+<div class="modal-overlay" *ngIf="isConfigModalOpen">
+  <div class="modal-container config-modal">
+    <div class="modal-header">
+      <h3>กำหนด{{ configType === 'water' ? 'ค่าน้ำ' : (configType === 'electric' ? 'ค่าไฟฟ้า' : 'ค่าเฟอร์นิเจอร์') }}</h3>
+      <button class="close-btn" (click)="closeConfigModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="modal-split-body">
+      <!-- Left Side: Methods -->
+      <div class="modal-left-panel">
+        <h4>เลือกวิธีคิดค่าบริการ</h4>
+        <div class="radio-group-container">
+          <label class="radio-option-card"
+            *ngFor="let method of (configType === 'water' ? waterCalcMethods : (configType === 'electric' ? electricCalcMethods : furnitureCalcMethods))"
+            [class.active]="calcMethod === method">
+            <input type="radio" [value]="method" [(ngModel)]="calcMethod" name="calcMethod">
+            <span>{{ method }}</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Right Side: Inputs -->
+      <div class="modal-right-panel">
+        <h4>กรุณากรอกข้อมูล</h4>
+
+        <div class="form-group" *ngIf="calcMethod === 'คิดตามจริง'
+                                            || calcMethod === 'คิดตามจริง (ขั้นต่ำเป็นจำนวนเงิน)'
+                                            || calcMethod === 'คิดตามจริง (ขั้นต่ำเป็นยูนิต)'
+                                            || calcMethod === 'คิดตามจริง (บวกส่วนต่างจากราคาขั้นต่ำ)'">
+          <label>คิดตามจริง (บาท / ยูนิต)</label>
+          <input type="number" class="form-control" [(ngModel)]="editPrice"
+            title="ราคาค่า{{ configType === 'water' ? 'น้ำ' : 'ไฟฟ้า' }}">
+        </div>
+
+        <div class="form-group" *ngIf="calcMethod === 'คิดตามจริง (ขั้นต่ำเป็นจำนวนเงิน)'
+                                            || calcMethod === 'คิดตามจริง (ขั้นต่ำเป็นยูนิต)'
+                                            || calcMethod === 'คิดตามจริง (บวกส่วนต่างจากราคาขั้นต่ำ)'">
+          <label>ขั้นต่ำ ({{ calcMethod.includes('ยูนิต') ? 'ยูนิต' : 'บาท' }})</label>
+          <input type="number" class="form-control" [(ngModel)]="editMinPrice" title="ขั้นต่ำ">
+        </div>
+
+        <div class="form-group" *ngIf="calcMethod === 'เหมาจ่ายรายเดือน' || calcMethod === 'เหมาจ่ายรายหัว' || calcMethod === 'คิดแบบคงที่ต่อเดือน'">
+          <label>{{ calcMethod }} (บาท / {{ calcMethod === 'เหมาจ่ายรายเดือน' ? 'เดือน' : (calcMethod === 'เหมาจ่ายรายหัว' ? 'หัว' : 'เดือน') }})</label>
+          <input type="number" class="form-control" [(ngModel)]="editPrice" title="ราคาแบบเหมา">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-cancel" (click)="closeConfigModal()">ยกเลิก</button>
+      <button class="btn btn-save" (click)="saveConfig()">บันทึก</button>
+    </div>
+  </div>
+</div>

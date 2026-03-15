@@ -18,10 +18,6 @@
         <span class="material-symbols-outlined icon">person</span>
         สมัครสมาชิก
       </a>
-      <a routerLink="/auth/login" href="#">
-        <span class="material-symbols-outlined icon">login</span>
-        เข้าสู่ระบบ
-      </a>
     </div>
   </header>
 
@@ -45,8 +41,7 @@
 
         <div class="input-group">
           <label for="email">อีเมล <span class="required-star">*</span></label>
-          <input type="email" id="email" name="email" [(ngModel)]="email" required 
-            [class.invalid]="isEmailInvalid()" />
+          <input type="email" id="email" name="email" [(ngModel)]="email" required [class.invalid]="isEmailInvalid()" />
           <div class="input-info">
             <div *ngIf="isSubmitted && !email.trim()" class="error-message">
               กรุณากรอกอีเมล
@@ -60,7 +55,7 @@
 
         <div class="input-group">
           <label for="password">รหัสผ่าน <span class="required-star">*</span></label>
-          <input type="password" id="password" name="password" [(ngModel)]="password" required 
+          <input type="password" id="password" name="password" [(ngModel)]="password" required
             [class.invalid]="isPasswordInvalid()" />
           <div class="input-info">
             <div *ngIf="isPasswordInvalid()" class="error-message">

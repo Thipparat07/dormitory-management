@@ -1,103 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>register</title>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-</head>
+<div class="auth-wrapper">
+  <header class="navbar">
+    <div class="nav-links">
+      <a routerLink="/auth/login" href="#">
+        <span class="material-symbols-outlined icon">login</span>
+        เข้าสู่ระบบ
+      </a>
+    </div>
+  </header>
 
-<body>
-    <header class="navbar">
-        <div class="nav-links">
-            <a routerLink="/register" href="#">
-                <span class="material-symbols-outlined icon">person</span>
-                สมัครสมาชิก
-            </a>
-            <a routerLink="/login" href="#">
-                <span class="material-symbols-outlined icon">login</span>
-                เข้าสู่ระบบ
-            </a>
+  <main class="container">
+
+    <section class="register-card">
+      <h2>สมัครสมาชิก</h2>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="input-group">
+          <label for="email">อีเมล <span class="required-star">*</span></label>
+          <input type="email" id="email" formControlName="email" placeholder="example@email.com"
+            [class.invalid]="submitted && f['email'].errors">
+          <div class="input-info">
+            <div *ngIf="submitted && f['email'].errors?.['email']" class="error-message">
+              รูปแบบอีเมลไม่ถูกต้อง
+            </div>
+            <div *ngIf="!(submitted && f['email'].errors?.['email'])" class="error-placeholder"></div>
+            <span class="char-count">{{ registerForm.get('email')?.value?.length || 0 }}/100</span>
+          </div>
         </div>
-    </header>
 
-    <main class="container">
-        <section class="content-left">
-            <div class="logo">
-                <img src="assets/image/logo.jpg" alt="Dorm Logo" class="logo-image">
+        <div class="input-group">
+          <label for="phone">เบอร์โทรศัพท์ <span class="required-star">*</span></label>
+          <input type="tel" id="phone" formControlName="phone" placeholder="08xxxxxxxx"
+            (keypress)="preventNonNumeric($event)" maxlength="10" [class.invalid]="submitted && f['phone'].errors">
+          <div class="input-info">
+            <div *ngIf="submitted && f['phone'].errors?.['pattern']" class="error-message">
+              เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก
             </div>
-            <div class="illustration">
-                <img src="assets/image/dorm-illustration.png" alt="Dorm Illustration">
+            <div *ngIf="!(submitted && f['phone'].errors?.['pattern'])" class="error-placeholder"></div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="password">รหัสผ่าน <span class="required-star">*</span></label>
+          <input type="password" id="password" formControlName="password" placeholder="อย่างน้อย 8 ตัวอักษร"
+            maxlength="32" [class.invalid]="submitted && f['password'].errors">
+          <div class="input-info">
+            <div *ngIf="submitted && f['password'].errors?.['minlength']" class="error-message">
+              รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร
             </div>
-        </section>
+            <div *ngIf="!(submitted && f['password'].errors?.['minlength'])" class="error-placeholder"></div>
+            <span class="char-count">{{ registerForm.get('password')?.value?.length || 0 }}/32</span>
+          </div>
+        </div>
 
-        <section class="register-card">
-            <h2>สมัครสมาชิก</h2>
-            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-                <div class="input-group">
-                    <label for="email">อีเมล <span class="required-star">*</span></label>
-                    <input type="email" id="email" formControlName="email" placeholder="example@email.com"
-                        [class.invalid]="submitted && f['email'].errors">
-                    <div class="input-info">
-                        <div *ngIf="submitted && f['email'].errors?.['email']" class="error-message">
-                            รูปแบบอีเมลไม่ถูกต้อง
-                        </div>
-                        <div *ngIf="!(submitted && f['email'].errors?.['email'])" class="error-placeholder"></div>
-                        <span class="char-count">{{ registerForm.get('email')?.value?.length || 0 }}/100</span>
-                    </div>
-                </div>
+        <div class="input-group">
+          <label for="confirm-password">ยืนยันรหัสผ่าน <span class="required-star">*</span></label>
+          <input type="password" id="confirm-password" formControlName="confirmPassword"
+            placeholder="กรอกรหัสผ่านอีกครั้ง" maxlength="32"
+            [class.invalid]="submitted && f['confirmPassword'].errors">
+          <div class="input-info">
+            <div *ngIf="submitted && f['confirmPassword'].errors?.['passwordMismatch']" class="error-message">
+              รหัสผ่านไม่ตรงกัน
+            </div>
+            <div *ngIf="!(submitted && f['confirmPassword'].errors?.['passwordMismatch'])" class="error-placeholder">
+            </div>
+          </div>
+        </div>
 
-                <div class="input-group">
-                    <label for="phone">เบอร์โทรศัพท์ <span class="required-star">*</span></label>
-                    <input type="tel" id="phone" formControlName="phone" placeholder="08xxxxxxxx"
-                        (keypress)="preventNonNumeric($event)" maxlength="10"
-                        [class.invalid]="submitted && f['phone'].errors">
-                    <div class="input-info">
-                        <div *ngIf="submitted && f['phone'].errors?.['pattern']" class="error-message">
-                            เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก
-                        </div>
-                        <div *ngIf="!(submitted && f['phone'].errors?.['pattern'])" class="error-placeholder"></div>
-                    </div>
-                </div>
+        <button type="submit" class="btn-submit" [disabled]="submitted && registerForm.invalid">ลงทะเบียน</button>
+        <div class="divider">or</div>
 
-                <div class="input-group">
-                    <label for="password">รหัสผ่าน <span class="required-star">*</span></label>
-                    <input type="password" id="password" formControlName="password" placeholder="อย่างน้อย 8 ตัวอักษร"
-                        maxlength="32" [class.invalid]="submitted && f['password'].errors">
-                    <div class="input-info">
-                        <div *ngIf="submitted && f['password'].errors?.['minlength']" class="error-message">
-                            รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร
-                        </div>
-                        <div *ngIf="!(submitted && f['password'].errors?.['minlength'])" class="error-placeholder"></div>
-                        <span class="char-count">{{ registerForm.get('password')?.value?.length || 0 }}/32</span>
-                    </div>
-                </div>
+        <button type="button" class="btn-google" (click)="loginWithGoogle()">
+          <img src="assets/image/Google.png" alt="Google">
+          Google
+        </button>
+      </form>
+    </section>
 
-                <div class="input-group">
-                    <label for="confirm-password">ยืนยันรหัสผ่าน <span class="required-star">*</span></label>
-                    <input type="password" id="confirm-password" formControlName="confirmPassword" placeholder="กรอกรหัสผ่านอีกครั้ง"
-                        maxlength="32" [class.invalid]="submitted && f['confirmPassword'].errors">
-                    <div class="input-info">
-                        <div *ngIf="submitted && f['confirmPassword'].errors?.['passwordMismatch']" class="error-message">
-                            รหัสผ่านไม่ตรงกัน
-                        </div>
-                        <div *ngIf="!(submitted && f['confirmPassword'].errors?.['passwordMismatch'])" class="error-placeholder"></div>
-                    </div>
-                </div>
+    <section class="visual-content">
+      <div class="brand">
+        <img src="assets/image/logo.jpg" alt="Dorm Logo" class="logo-image">
+        <p class="tagline">ให้เราช่วยจัดการหอพักของคุณ อย่างมีประสิทธิภาพ</p>
+      </div>
+      <div class="hero-image">
+        <img src="assets/image/Cream.png" alt="Dorm Room Illustration">
+      </div>
+    </section>
 
-                <button type="submit" class="btn-submit"
-                    [disabled]="submitted && registerForm.invalid">ลงทะเบียน</button>
-                <div class="divider">or</div>
-
-                <button type="button" class="btn-google" (click)="loginWithGoogle()">
-                    <img src="assets/image/Google.png" alt="Google">
-                    Google
-                </button>
-            </form>
-        </section>
-    </main>
-</body>
-
-</html>
+  </main>
+</div>

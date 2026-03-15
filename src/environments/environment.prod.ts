@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiEndpoint: 'https://project-backend-dormitory.vercel.app' // Placeholder for real production URL
+    apiEndpoint: 'https://api.dormmy.online' // Placeholder for real production URL
 };

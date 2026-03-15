@@ -1,0 +1,102 @@
+<app-header-owner [dormId]="null" activeTab="dashboard"></app-header-owner>
+
+<div class="container">
+    <div class="form-wrapper">
+        <div class="form-header">
+            <h1>ข้อมูลหอพัก</h1>
+            <p>โปรดกรอกข้อมูลหอพักของคุณ</p>
+        </div>
+
+        <form class="dorm-form" #dormForm="ngForm" (ngSubmit)="submitForm()">
+            <div class="form-group">
+                <label for="dormName">ชื่อหอพัก <span class="required-star">*</span></label>
+                <input type="text" id="dormName" name="name" [(ngModel)]="formData.name" #name="ngModel"
+                    placeholder="กรอกชื่อหอพัก" maxlength="100" required>
+                <div class="input-info">
+                    <div class="error-placeholder"></div>
+                    <span class="char-count">{{formData.name.length}}/100</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">เบอร์โทรติดต่อหอพัก <span class="required-star">*</span></label>
+                <input type="text" id="phone" name="phone" [(ngModel)]="formData.phone" #phone="ngModel"
+                    placeholder="กรอกเบอร์โทร (10 หลัก)" pattern="^[0-9]{10}$" (keypress)="preventNonNumeric($event)"
+                    maxlength="10" required>
+                <div class="input-info">
+                    <div *ngIf="phone.errors?.['pattern'] && (phone.dirty || phone.touched)" class="error-message">
+                        เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก
+                    </div>
+                    <div *ngIf="!phone.errors?.['pattern']" class="error-placeholder"></div>
+                    <span class="char-count">{{formData.phone.length}}/10</span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half-width">
+                    <label for="billDate">หอพักของคุณทำบิลทุกวันที่เท่าไหร่</label>
+                    <select id="billDate" name="bill_generation_day" [(ngModel)]="formData.bill_generation_day"
+                        required>
+                        <option value="" disabled selected hidden>เลือกวันที่</option>
+                        <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+                    </select>
+                    <span class="material-symbols-outlined select-arrow">expand_more</span>
+                </div>
+                <div class="form-group half-width">
+                    <label for="dueDate">กำหนดวันที่สิ้นสุดการชำระเงิน</label>
+                    <select id="dueDate" name="bill_due_date" [(ngModel)]="formData.bill_due_date" required>
+                        <option value="" disabled selected hidden>เลือกวันที่</option>
+                        <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+                    </select>
+                    <span class="material-symbols-outlined select-arrow">expand_more</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>รูปแบบการทำบิล</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="billType" value="postpaid" [(ngModel)]="formData.billing_type"
+                            required>
+                        <span class="radio-custom"></span>
+                        จ่ายค่าห้องหลังเข้าอยู่
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="billType" value="prepaid" [(ngModel)]="formData.billing_type"
+                            required>
+                        <span class="radio-custom"></span>
+                        จ่ายค่าห้องก่อนเข้าอยู่
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half-width">
+                    <label for="floorCount">กรอกจำนวนชั้น <span class="required-star">*</span></label>
+                    <input type="number" id="floorCount" name="number_of_floors" [(ngModel)]="formData.number_of_floors"
+                        min="1" max="100" placeholder="ระบุจำนวนชั้น" required>
+                </div>
+
+                <div class="form-group half-width">
+                    <label for="roomCount">จำนวนห้อง <span class="required-star">*</span></label>
+                    <input type="number" id="roomCount" name="rooms_per_floor" [(ngModel)]="formData.rooms_per_floor"
+                        min="1" max="200" placeholder="ระบุจำนวนห้องทั้งหมด" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">ที่อยู่หอพัก <span class="required-star">*</span></label>
+                <input type="text" id="address" name="address" [(ngModel)]="formData.address" #address="ngModel"
+                    placeholder="บ้านเลขที่/ หมู่/ ซอย/ ถนน/ ตำบล/ อำเภอ/ จังหวัด/ รหัสไปรษณีย์" maxlength="500" required>
+                <div class="input-info">
+                    <div class="error-placeholder"></div>
+                    <span class="char-count">{{formData.address.length}}/500</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-save" [disabled]="isLoading || dormForm.invalid">
+                {{ isLoading ? 'กำลังบันทึก...' : 'บันทึก' }}
+            </button>
+        </form>
+    </div>
+</div>

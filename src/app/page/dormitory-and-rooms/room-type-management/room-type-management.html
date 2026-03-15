@@ -1,0 +1,72 @@
+<app-header-owner [dormId]="dormId" activeTab="layout"></app-header-owner>
+
+<div class="layout-container">
+    <div class="page-title-section">
+        <h2>จัดการประเภทห้องและราคา</h2>
+    </div>
+
+    <div class="action-bar">
+        <button class="btn-add" (click)="openAddModal()">
+            <span class="material-symbols-outlined">add</span>
+            เพิ่มประเภทห้อง
+        </button>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading">
+        กำลังโหลดข้อมูล...
+    </div>
+
+    <div class="type-list-container" *ngIf="!isLoading">
+        <div class="type-item-row" *ngFor="let type of roomTypes">
+            <div class="type-main-info">
+                <span class="type-name">{{ type.name }}</span>
+                <span class="type-price">{{ type.price | number }} บาท/เดือน</span>
+            </div>
+            <div class="type-item-actions">
+                <button class="btn-edit" (click)="openEditModal(type)">แก้ไข</button>
+                <button class="btn-delete" (click)="deleteRoomType(type.id)">ลบ</button>
+            </div>
+        </div>
+
+        <div class="no-results" *ngIf="roomTypes.length === 0">
+            ยังไม่มีข้อมูลประเภทห้อง
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+        <h3>{{ isEditMode ? 'แก้ไขประเภทห้อง' : 'เพิ่มประเภทห้องใหม่' }}</h3>
+
+        <div class="form-group">
+            <label>ชื่อประเภทห้อง <span class="required-star">*</span></label>
+            <input type="text" [(ngModel)]="typeForm.name" placeholder="ระบุชื่อประเภท"
+                [class.invalid]="isSubmitted && !typeForm.name" (keypress)="preventNumeric($event)"
+                (input)="sanitizeRoomTypeName()">
+            <div class="input-info">
+                <div *ngIf="isSubmitted && !typeForm.name" class="error-message">
+                    กรุณากรอกชื่อประเภทห้อง
+                </div>
+                <div *ngIf="!(isSubmitted && !typeForm.name)" class="error-placeholder"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>ราคาเช่า (บาท) <span class="required-star">*</span></label>
+            <input type="number" [(ngModel)]="typeForm.price" placeholder="ระบุราคา"
+                [class.invalid]="isSubmitted && (typeForm.price === null || typeForm.price === undefined || typeForm.price < 0)">
+            <div class="input-info">
+                <div *ngIf="isSubmitted && (typeForm.price === null || typeForm.price === undefined || typeForm.price < 0)" class="error-message">
+                    กรุณากรอกราคาเช่าให้ถูกต้อง
+                </div>
+                <div *ngIf="!(isSubmitted && (typeForm.price === null || typeForm.price === undefined || typeForm.price < 0))" class="error-placeholder"></div>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" (click)="closeModal()">ยกเลิก</button>
+            <button class="btn-save" (click)="saveRoomType()">บันทึก</button>
+        </div>
+    </div>
+</div>

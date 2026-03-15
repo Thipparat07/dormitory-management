@@ -1,0 +1,64 @@
+<app-header-owner [dormId]="null" activeTab="dashboard"></app-header-owner>
+
+<div class="main-container">
+    <!-- Show Loading state -->
+    <div *ngIf="isLoading" class="loading-state">
+        <p>กำลังโหลดข้อมูล...</p>
+    </div>
+
+    <ng-container *ngIf="!isLoading">
+        <div class="dorm-card">
+            <div class="card-banner">
+                <div class="banner-text">
+                    <span class="highlight">สำหรับ</span>
+                    <p>เจ้าของหอพัก</p>
+                </div>
+                <div class="banner-img">
+                    <img src="assets/image/Blue_and_White.png" alt="owner">
+                </div>
+            </div>
+
+            <div class="dorm-list-container">
+                <div class="dorm-item" *ngFor="let dorm of dormitories">
+                    <div class="info-section">
+                        <div class="name-status-wrapper">
+                            <h2 class="dorm-name">{{ dorm.name }}</h2>
+                            <div class="join-code-pill" *ngIf="dorm.join_code" (click)="$event.stopPropagation(); copyJoinCode(dorm.join_code)" title="คลิกเพื่อคัดลอก">
+                                <span class="material-symbols-outlined">key</span>
+                                ID: {{ dorm.join_code }}
+                                <span class="material-symbols-outlined copy-btn">content_copy</span>
+                            </div>
+                        </div>
+                        <div class="status-row">
+                            <span class="status-item"><span class="material-symbols-outlined icon-red">payments</span>
+                                ค้างชำระ <span class="bold">{{ dorm.overdue_rooms || 0 }}</span> ห้อง</span>
+                            <span class="status-item"><span
+                                    class="material-symbols-outlined icon-green">person_outline</span> มีผู้เช่า
+                                <span class="bold">{{ dorm.occupied_rooms || 0 }}</span> ห้อง</span>
+                            <span class="status-item"><span class="material-symbols-outlined icon-gray">remove</span>
+                                ว่าง
+                                <span class="bold">{{ dorm.vacant_rooms || 0 }}</span>
+                                ห้อง</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-orange" (click)="manageDorm(dorm.id)">
+                            <span class="material-symbols-outlined">domain</span> จัดการหอ
+                        </button>
+                        <button class="btn-green">
+                            <span class="material-symbols-outlined">request_quote</span> ดูบิล
+                        </button>
+                        <button class="btn-red">
+                            <span class="material-symbols-outlined">payments</span> จ่ายบิล
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button class="btn-add-building" (click)="navigateToAddBuilding()">เพิ่มตึกใหม่</button>
+            </div>
+        </div>
+    </ng-container>
+</div>

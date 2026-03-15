@@ -1,0 +1,69 @@
+<app-header [roomId]="roomId" activeTab="info"></app-header>
+
+<div class="main-content">
+    <div class="loading-spinner" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>กำลังโหลดข้อมูล...</p>
+    </div>
+
+    <ng-container *ngIf="!isLoading && dormInfo">
+        <div class="card dorm-card">
+            <div class="card-header-image">
+                <img src="assets/image/Edit.png" alt="Dorm Header">
+            </div>
+            <div class="card-body">
+                <h2 class="dorm-name">{{ dormInfo.dormitory.name }} (ห้อง {{ dormInfo.room.room_number }})</h2>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="material-symbols-outlined icon">location_on</span>
+                        <span>{{ dormInfo.dormitory.address }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="material-symbols-outlined icon">call</span>
+                        <span class="highlight-text">{{ dormInfo.dormitory.phone }}</span>
+                    </div>
+                    <!-- Utility Info in same style as info-list -->
+                    <div class="info-item">
+                        <span class="material-symbols-outlined icon">bolt</span>
+                        <span>ค่าไฟ: <span class="highlight-text">{{ dormInfo.utilities.electricity_rate }}</span>
+                            บาท/หน่วย</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="material-symbols-outlined icon">water_drop</span>
+                        <span>ค่าน้ำ: <span class="highlight-text">{{ dormInfo.utilities.water_rate }}</span>
+                            บาท/หน่วย</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bank-card">
+            <h3 class="bank-title">บัญชีธนาคารหอพัก</h3>
+            <div class="bank-list">
+                <div class="bank-details-container" *ngFor="let bank of dormInfo.bank_accounts">
+                    <div class="bank-logo">
+                        <img src="assets/image/logo_bank.png" alt="Bank Logo">
+                    </div>
+                    <div class="bank-info">
+                        <div class="account-number">{{ bank.account_number }}</div>
+                        <div class="account-name">ชื่อบัญชี {{ bank.account_name }}</div>
+                        <div class="bank-branch">{{ bank.bank_name }}</div>
+                    </div>
+                </div>
+                <div class="empty-state-box" *ngIf="dormInfo.bank_accounts.length === 0">
+                    <div class="empty-icon">
+                        <span class="material-symbols-outlined">account_balance</span>
+                    </div>
+                    <p>ยังไม่มีข้อมูลบัญชีธนาคาร</p>
+                    <p class="sub-text">หอพักนี้ยังไม่ได้เพิ่มข้อมูลบัญชีธนาคารสำหรับรับโอนเงิน</p>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <div class="no-data" *ngIf="!isLoading && !dormInfo">
+        <span class="material-symbols-outlined">info</span>
+        <p>คุณยังไม่มีข้อมูลหอพัก กรุณาเข้าพักในหอพักก่อน</p>
+        <button class="btn-join" routerLink="/join-dormitory">เข้าร่วมหอพัก</button>
+    </div>
+</div>

@@ -1,0 +1,195 @@
+<app-header-owner [dormId]="dormitoryId" activeTab="settings"></app-header-owner>
+
+<div class="bank-account-container">
+  <div class="content-wrapper">
+    <div class="header-box">
+      <button class="btn-add" (click)="openAddBankModal()">เพิ่มบัญชี</button>
+      <h2>บัญชีธนาคาร</h2>
+    </div>
+    <div class="content-box" *ngFor="let bank of banks; trackBy: trackBank">
+      <div class="bank-details-wrapper">
+        <div class="bank-logo">
+          <img src="assets/image/logo_bank.png">
+        </div>
+        <div class="bank-info">
+          <div class="account-number">
+            {{ bank.account_number }}
+          </div>
+          <div class="account-name">
+            {{ bank.account_name }}
+          </div>
+          <div class="bank-branch">
+            {{ bank.bank_name }}
+          </div>
+        </div>
+      </div>
+      <div class="action-footer">
+        <button class="btn-edit" (click)="openEditBankModal(bank)">
+          แก้ไข
+        </button>
+        <button class="btn-delete" (click)="deleteBank(bank.id)">
+          ลบ
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state-box" *ngIf="banks.length === 0">
+      <div class="empty-icon">
+        <span class="material-symbols-outlined">account_balance</span>
+      </div>
+      <p>ยังไม่มีข้อมูลบัญชีธนาคาร</p>
+      <p class="sub-text">คุณยังไม่มีบัญชีธนาคารสำหรับรับโอนเงินค่าเช่า</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isAddBankModalOpen">
+  <div class="modal-container">
+
+    <div class="modal-header">
+      <h3>เพิ่มบัญชี</h3>
+      <span class="material-symbols-outlined close-btn" (click)="closeAddBankModal()">close</span>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label>เลือกบัญชีธนาคาร <span class="required-star">*</span></label>
+
+        <div class="select-wrapper">
+          <select [(ngModel)]="form.bank_name" [class.invalid]="isSubmitted && !form.bank_name">
+            <option value="" disabled hidden *ngIf="!form.bank_name">เลือกธนาคาร</option>
+            <option value="ธนาคารกสิกรไทย">ธนาคารกสิกรไทย</option>
+            <option value="ธนาคารไทยพาณิชย์">ธนาคารไทยพาณิชย์</option>
+          </select>
+          <span class="material-symbols-outlined select-arrow">expand_more</span>
+        </div>
+        <div class="input-info">
+          <div *ngIf="isSubmitted && !form.bank_name" class="error-message">กรุณาเลือกธนาคาร</div>
+          <div *ngIf="!(isSubmitted && !form.bank_name)" class="error-placeholder"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>ชื่อบัญชี <span class="required-star">*</span></label>
+
+        <input type="text" name="account_name" [(ngModel)]="form.account_name" placeholder="ชื่อเจ้าของบัญชี"
+          [class.invalid]="isSubmitted && !form.account_name" maxlength="100" (keypress)="preventNumeric($event)"
+          (input)="sanitizeAccountName()">
+        <div class="input-info">
+          <div *ngIf="isSubmitted && !form.account_name" class="error-message">
+            กรุณากรอกชื่อบัญชี
+          </div>
+          <div *ngIf="!(isSubmitted && !form.account_name)" class="error-placeholder"></div>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label>เลขบัญชี <span class="required-star">*</span></label>
+
+        <input type="text" name="account_number" [(ngModel)]="form.account_number" placeholder="เลขบัญชี"
+          [class.invalid]="isSubmitted && !form.account_number" (keypress)="preventNonNumeric($event)" 
+          (input)="sanitizeAccountNumber()" maxlength="20" inputmode="numeric">
+        <div class="input-info">
+          <div *ngIf="isSubmitted && !form.account_number" class="error-message">
+            กรุณากรอกเลขบัญชี
+          </div>
+          <div *ngIf="!(isSubmitted && !form.account_number)" class="error-placeholder"></div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+      <button class="btn-cancel" (click)="closeAddBankModal()" [disabled]="loading">
+        ยกเลิก
+      </button>
+
+      <button class="btn-save" (click)="saveBank()" [disabled]="loading">
+        {{ loading ? 'กำลังบันทึก...' : 'บันทึก' }}
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isEditBankModalOpen">
+
+  <div class="modal-container">
+
+    <div class="modal-header">
+      <h3>แก้ไขบัญชี</h3>
+
+      <span class="material-symbols-outlined close-btn" (click)="closeEditBankModal()">
+        close
+      </span>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label>เลือกบัญชีธนาคาร <span class="required-star">*</span></label>
+
+        <div class="select-wrapper">
+          <select [(ngModel)]="form.bank_name" [class.invalid]="isSubmitted && !form.bank_name">
+            <option value="ธนาคารกสิกรไทย">ธนาคารกสิกรไทย</option>
+            <option value="ธนาคารไทยพาณิชย์">ธนาคารไทยพาณิชย์</option>
+          </select>
+          <span class="material-symbols-outlined select-arrow">expand_more</span>
+        </div>
+        <div class="input-info">
+          <div *ngIf="isSubmitted && !form.bank_name" class="error-message">กรุณาเลือกธนาคาร</div>
+          <div *ngIf="!(isSubmitted && !form.bank_name)" class="error-placeholder"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>ชื่อบัญชี <span class="required-star">*</span></label>
+
+        <input type="text" [(ngModel)]="form.account_name" [class.invalid]="isSubmitted && !form.account_name"
+          maxlength="100" (keypress)="preventNumeric($event)" (input)="sanitizeAccountName()">
+        <div class="input-info">
+          <div *ngIf="isSubmitted && !form.account_name" class="error-message">
+            กรุณากรอกชื่อบัญชี
+          </div>
+          <div *ngIf="!(isSubmitted && !form.account_name)" class="error-placeholder"></div>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label>เลขบัญชี <span class="required-star">*</span></label>
+
+        <input type="text" [(ngModel)]="form.account_number" [class.invalid]="isSubmitted && !form.account_number"
+          (keypress)="preventNonNumeric($event)" (input)="sanitizeAccountNumber()" maxlength="20" inputmode="numeric">
+        <div class="input-info">
+          <div *ngIf="isSubmitted && !form.account_number" class="error-message">
+            กรุณากรอกเลขบัญชี
+          </div>
+          <div *ngIf="!(isSubmitted && !form.account_number)" class="error-placeholder"></div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+      <button class="btn-cancel" (click)="closeEditBankModal()" [disabled]="loading">
+        ยกเลิก
+      </button>
+
+      <button class="btn-save" (click)="updateBank()" [disabled]="loading">
+        {{ loading ? 'กำลังบันทึก...' : 'บันทึก' }}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

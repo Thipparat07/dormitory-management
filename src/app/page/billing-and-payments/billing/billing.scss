@@ -1,0 +1,87 @@
+.main-container {
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 50px;
+    background-color: #fcfcfc;
+    min-height: 100vh;
+    padding-left: 5%;
+    padding-right: 5%;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Kanit', sans-serif;
+
+    @media (max-width: 768px) {
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 70px;
+    }
+}
+
+.header-box {
+    background-color: #d9d9d9;
+    width: 100%;
+    max-width: 800px;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bill-list {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.bill-card {
+    background-color: white;
+    padding: 15px 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #eee;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .bill-title {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .bill-status {
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        span {
+            font-weight: bold;
+        }
+
+        &.pending {
+            color: #ffb800;
+        }
+
+        &.overdue {
+            color: #ff4d4f;
+        }
+
+        &.paid {
+            color: #52c41a;
+        }
+    }
+}

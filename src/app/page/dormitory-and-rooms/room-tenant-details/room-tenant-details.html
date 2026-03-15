@@ -1,0 +1,312 @@
+<app-header-owner [dormId]="dormId" activeTab="layout"></app-header-owner>
+
+<div class="sub-header">
+    <div class="sub-header-content">
+        <div class="room-title-badge">
+            ห้อง {{ roomData?.room_number || '...' }}
+        </div>
+        <div class="close-btn" (click)="close()">
+            <span class="material-symbols-outlined">close</span> ปิด
+        </div>
+    </div>
+</div>
+
+<main class="main-container">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>กำลังโหลดข้อมูล...</p>
+    </div>
+
+    <div class="content-wrapper" *ngIf="!isLoading">
+        <!-- SECTION: Connected Tenant or Pending Request -->
+        <ng-container *ngIf="tenantData; else vacantSection">
+            <h2 class="section-title">
+                {{ tenantData.status === 'approved' ? 'ผู้เช่าที่เชื่อมต่อแล้ว' : 'คำขอเข้าร่วม (รออนุมัติ)' }}
+            </h2>
+
+            <div class="tenant-card">
+                <div class="tenant-info-section">
+                    <div class="profile-placeholder">
+                        <img *ngIf="tenantData.profile_picture; else defaultProfile" [src]="tenantData.profile_picture"
+                            alt="profile">
+                        <ng-template #defaultProfile>
+                            <span class="material-symbols-outlined">person</span>
+                        </ng-template>
+                    </div>
+                    <div class="tenant-details">
+                        <div class="tenant-name">{{ tenantData.full_name }}</div>
+                        <div class="tenant-phone">{{ tenantData.phone || 'ไม่ระบุเบอร์โทรศัพท์' }}</div>
+                        <div class="tenant-join-date" *ngIf="tenantData.joined_at">
+                            {{ tenantData.status === 'approved' ? 'เชื่อมหอพักเมื่อ' : 'ส่งคำขอเมื่อ' }}
+                            {{ tenantData.joined_at | date:'d/M/yyyy' }}
+                        </div>
+                    </div>
+                    <div class="status-badge" [ngClass]="tenantData.status">
+                        {{ tenantData.status === 'approved' ? 'อนุมัติแล้ว' : 'รออนุมัติ' }}
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <!-- Delete button: Always "ลบ" -->
+                    <button class="btn btn-danger" (click)="confirmRemoveTenant()">ลบ</button>
+
+                    <!-- Approved State -->
+                    <ng-container *ngIf="tenantData.status === 'approved'">
+                        <button class="btn btn-warning" (click)="openEditModal()">แก้ไข</button>
+                    </ng-container>
+
+                    <!-- Non-Approved State -->
+                    <ng-container *ngIf="tenantData.status !== 'approved'">
+                        <button class="btn btn-success" (click)="approveTenant()">อนุมัติ</button>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- SECTION: Vacant Room (No active tenant/request) -->
+        <ng-template #vacantSection>
+            <div class="vacant-state">
+                <span class="material-symbols-outlined large-icon">door_front</span>
+                <p>ห้องนี้ยังไม่มีผู้เช่าหรือคำขอที่รอการอนุมัติ</p>
+                <div class="bottom-action-section">
+                    <button class="btn-bottom" (click)="openModal(false)">เพิ่มผู้เช่าเข้าห้องพัก</button>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</main>
+
+<!-- Modal for VIEWING Tenant Details -->
+<div class="modal-overlay" *ngIf="isDetailsModalOpen">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3 class="modal-title">ข้อมูลผู้เช่า</h3>
+            <div class="close-modal-btn" (click)="closeDetailsModal()">
+                <span class="material-symbols-outlined">close</span> ปิด
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-section">
+                <div class="modal-section-title">ข้อมูลหลัก</div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label>ชื่อ-นามสกุล</label>
+                        <div class="readonly-value">{{ tenantData?.full_name || '-' }}</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label>เบอร์โทรศัพท์</label>
+                        <div class="readonly-value">{{ tenantData?.phone || 'ไม่ระบุ' }}</div>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label>อีเมล</label>
+                        <div class="readonly-value">{{ tenantData?.email || '-' }}</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label>หมายเลขบัตรประชาชน</label>
+                        <div class="readonly-value">{{ tenantData?.national_id || '-' }}</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label>วันเกิด</label>
+                        <div class="readonly-value">{{ (tenantData?.date_of_birth | date:'dd/MM/yyyy') || '-' }}</div>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label>สัญชาติ</label>
+                        <div class="readonly-value">{{ tenantData?.nationality || '-' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="address-upload-container">
+                <div class="address-section">
+                    <div class="modal-section-title">ที่อยู่ตามสำเนาทะเบียนบ้าน</div>
+                    <div class="readonly-value"
+                        style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; min-height: 50px;">
+                        {{ tenantData?.address || '-' }}
+                    </div>
+                </div>
+
+                <div class="upload-section" *ngIf="tenantData?.id_card_image">
+                    <div class="modal-section-title">รูปบัตรประชาชน/หลักฐาน</div>
+                    <div class="image-preview-container" style="margin-top: 10px;">
+                        <img [src]="tenantData.id_card_image" alt="ID Card"
+                            style="max-width: 100%; border-radius: 4px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer multi-buttons">
+            <button class="btn-submit btn-warning" (click)="openEditModal()">แก้ไขข้อมูลผู้เช่า</button>
+            <button class="btn-submit btn-danger" (click)="confirmRemoveTenant()">ลบข้อมูลผู้เช่า</button>
+        </div>
+    </div>
+</div>
+
+<!-- Unified Modal for ADDING/EDITING Tenant Data -->
+<div class="modal-overlay" *ngIf="isModalOpen">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3 class="modal-title">{{ isEditMode ? 'แก้ไขข้อมูลผู้เช่า' : 'เพิ่มข้อมูลผู้เช่า' }}</h3>
+            <div class="close-modal-btn" (click)="closeModal()">
+                <span class="material-symbols-outlined">close</span> ปิด
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-section">
+                <div class="modal-section-title">ข้อมูลหลัก</div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="fName">ชื่อ<span class="required-star">*</span></label>
+                        <input type="text" id="fName" class="form-control" title="ชื่อ"
+                            [(ngModel)]="tenantForm.firstName" [class.invalid]="isFirstNameInvalid()"
+                            (input)="validateAlphabet($event)">
+                        <div class="input-info">
+                            <span class="error-message" *ngIf="isFirstNameInvalid()">กรุณากรอกชื่อ</span>
+                        </div>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="lName">นามสกุล<span class="required-star">*</span></label>
+                        <input type="text" id="lName" class="form-control" title="นามสกุล"
+                            [(ngModel)]="tenantForm.lastName" [class.invalid]="isLastNameInvalid()"
+                            (input)="validateAlphabet($event)">
+                        <div class="input-info">
+                            <span class="error-message" *ngIf="isLastNameInvalid()">กรุณากรอกนามสกุล</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="tPhone">เบอร์โทรศัพท์ติดต่อ<span class="required-star">*</span></label>
+                        <input type="text" id="tPhone" class="form-control" title="เบอร์โทรศัพท์"
+                            [(ngModel)]="tenantForm.phone" [class.invalid]="isPhoneInvalid()" maxlength="10"
+                            (input)="validateNumeric($event)">
+                        <div class="input-info">
+                            <span class="error-message" *ngIf="isPhoneInvalid()">กรุณากรอกเบอร์โทรศัพท์ 10 หลัก</span>
+                        </div>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="tEmail">อีเมล</label>
+                        <input type="email" id="tEmail" class="form-control" title="อีเมล"
+                            [(ngModel)]="tenantForm.email" [readonly]="isEditMode" [disabled]="isEditMode"
+                            (blur)="onEmailBlur()">
+                        <div class="input-info"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="tIdNum">หมายเลขบัตรประชาชน<span class="required-star">*</span></label>
+                        <input type="text" id="tIdNum" class="form-control" title="หมายเลขบัตรประชาชน"
+                            [(ngModel)]="tenantForm.idNumber" [class.invalid]="isIdNumberInvalid()" maxlength="13"
+                            (input)="validateNumeric($event)">
+                        <div class="input-info">
+                            <span class="error-message" *ngIf="isIdNumberInvalid()">กรุณากรอกหมายเลขบัตรประชาชน 13
+                                หลัก</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group date-dropdown-group">
+                        <label for="tBirthDay">วันเกิด<span class="required-star">*</span></label>
+                        <input type="text" id="tBirthDay" class="form-control" title="วันเกิด"
+                            [(ngModel)]="tenantForm.birthDay" [class.invalid]="isBirthDateInvalid()"
+                            (input)="validateNumeric($event)" maxlength="2">
+                    </div>
+                    <div class="form-group date-dropdown-group">
+                        <label for="tBirthMonth">เดือนเกิด<span class="required-star">*</span></label>
+                        <input type="text" id="tBirthMonth" class="form-control" title="เดือนเกิด"
+                            [(ngModel)]="tenantForm.birthMonth" [class.invalid]="isBirthDateInvalid()"
+                            (input)="validateNumeric($event)" maxlength="2">
+                    </div>
+                    <div class="form-group date-dropdown-group mr-auto">
+                        <label for="tBirthYear">ปีเกิด (ค.ศ.)<span class="required-star">*</span></label>
+                        <input type="text" id="tBirthYear" class="form-control" title="ปีเกิด"
+                            [(ngModel)]="tenantForm.birthYear" [class.invalid]="isBirthDateInvalid()"
+                            (input)="validateNumeric($event)" maxlength="4">
+                    </div>
+
+                    <div class="form-group nationality-dropdown">
+                        <label for="tNationality">สัญชาติ</label>
+                        <select id="tNationality" class="form-control" title="สัญชาติ"
+                            [(ngModel)]="tenantForm.nationality">
+                            <option value="ไทย">ไทย</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-info" style="margin-top: -10px; margin-bottom: 10px;">
+                    <span class="error-message" *ngIf="isBirthDateInvalid()">กรุณากรอกวัน/เดือน/ปีเกิดให้ครบถ้วน</span>
+                </div>
+            </div>
+
+            <div class="address-upload-container">
+                <div class="address-section">
+                    <div class="modal-section-title">ที่อยู่ตามสำเนาทะเบียนบ้าน</div>
+                    <div class="form-group">
+                        <label for="tAddr" class="sr-only hidden-label">บ้านเลขที่</label>
+                        <input type="text" id="tAddr" class="form-control"
+                            placeholder="เลขที่ ซอย ถนน อาคาร ห้องเลขที่ หรือหมู่บ้าน" title="ที่อยู่"
+                            [(ngModel)]="tenantForm.address">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="tSubDist" class="sr-only hidden-label">แขวง/ตำบล</label>
+                            <input type="text" id="tSubDist" class="form-control" placeholder="แขวง/ตำบล"
+                                title="แขวง/ตำบล" [(ngModel)]="tenantForm.subDistrict">
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="tDist" class="sr-only hidden-label">เขต/อำเภอ</label>
+                            <input type="text" id="tDist" class="form-control" placeholder="เขต/อำเภอ" title="เขต/อำเภอ"
+                                [(ngModel)]="tenantForm.district">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="tProv" class="sr-only hidden-label">จังหวัด</label>
+                            <input type="text" id="tProv" class="form-control" placeholder="จังหวัด" title="จังหวัด"
+                                [(ngModel)]="tenantForm.province">
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="tPost" class="sr-only hidden-label">รหัสไปรษณีย์</label>
+                            <input type="text" id="tPost" class="form-control" placeholder="รหัสไปรษณีย์"
+                                title="รหัสไปรษณีย์" [(ngModel)]="tenantForm.postalCode"
+                                (input)="validateNumeric($event)" maxlength="5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upload-section">
+                    <div class="modal-section-title">แนบรูปบัตรประชาชน/หลักฐาน</div>
+                    <input type="file" id="tFile" class="hidden-file-input" title="อัพโหลดไฟล์" accept="image/*,.pdf"
+                        (change)="onFileSelected($event)">
+                    <label for="tFile" class="upload-btn">
+                        <span class="material-symbols-outlined">cloud_upload</span>
+                        {{ uploadedFileName || 'รูปบัตรประชาชน/PDF' }}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-submit btn-success" (click)="saveTenant()" [disabled]="isSaving">
+                {{ isSaving ? 'กำลังบันทึก...' : 'ยืนยัน' }}
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+﻿<app-header-owner [dormId]="dormId" activeTab="booking"></app-header-owner>
+
+<div class="content-container">
+    <div class="page-title-section">
+        <h2>ค่าเช่าห้อง</h2>
+    </div>
+
+    <div class="filter-section">
+        <div class="filter-controls">
+            <div class="search-box">
+                <span class="material-symbols-outlined search-icon">search</span>
+                <input type="text" placeholder="ค้นหาตามหมายเลขห้อง" [(ngModel)]="searchTerm"
+                    (ngModelChange)="applyFilters()">
+            </div>
+
+            <div class="dropdown-box">
+                <select title="สถานะ" [(ngModel)]="selectedStatus" (ngModelChange)="applyFilters()">
+                    <option value="all">ห้องทั้งหมด</option>
+                    <option value="available">ห้องว่าง</option>
+                    <option value="occupied">มีผู้เช่า</option>
+                </select>
+            </div>
+
+            <div class="dropdown-box">
+                <select title="ค้นหาชั้น" [(ngModel)]="selectedFloorFilter" (ngModelChange)="applyFilters()">
+                    <option value="all">ชั้นทั้งหมด</option>
+                    <option *ngFor="let f of floors" [value]="f.number">ชั้นที่ {{ f.number }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="select-all-bar">
+            <label class="custom-checkbox">
+                <input type="checkbox" [checked]="selectAll" (change)="toggleAll($event)">
+                <span class="checkmark"></span>
+                เลือกทั้งหมด เพื่อกำหนดค่าเช่าห้อง
+            </label>
+            <div class="assign-action">
+                <button class="btn btn-primary" (click)="openAssignModal()">กำหนดประเภทและราคา</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="floor-container" *ngFor="let floor of filteredFloors">
+        <div class="floor-header">
+            <h3 class="floor-title">ชั้นที่ {{ floor.number }}</h3>
+            <div class="floor-actions">
+                <button class="btn btn-select-floor" (click)="toggleFloor(floor, true)">เลือกทั้งชั้น</button>
+                <button class="btn btn-deselect-floor" (click)="toggleFloor(floor, false)">ไม่เลือก</button>
+            </div>
+        </div>
+
+        <div class="rooms-grid">
+            <div class="room-wrapper" *ngFor="let room of floor.rooms">
+                <div class="room-number">{{ room.number }}</div>
+                <div class="room-card" [class.selected]="room.selected" [class.occupied]="room.status === 'occupied'"
+                    (click)="toggleRoom(room)">
+                    <div class="rent-status">{{ room.status === 'occupied' ? 'มีผู้เช่า' : 'ว่าง' }}</div>
+                    <div class="room-type-label">{{ room.room_type_name || 'ยังไม่กำหนดประเภท' }}</div>
+                    <div class="rent-price">{{ room.price | number }} บาท/เดือน</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Room Type Selection Modal -->
+    <div class="modal-overlay" *ngIf="showTypeModal">
+        <div class="modal-content">
+            <h3>เลือกประเภทห้อง</h3>
+            <div class="type-list">
+                <div class="type-item" *ngFor="let type of roomTypes" (click)="selectedTypeId = type.id"
+                    [class.selected]="selectedTypeId === type.id">
+                    <div class="type-name">{{ type.name }}</div>
+                    <div class="type-price">{{ type.price | number }} บาท</div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel" (click)="showTypeModal = false">ยกเลิก</button>
+                <button class="btn btn-save" (click)="applyRoomType()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>

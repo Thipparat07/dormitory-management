@@ -1,0 +1,79 @@
+<app-header-owner [dormId]="dormId" activeTab="layout"></app-header-owner>
+<div class="layout-container">
+    <div class="search-section">
+        <div class="search-box">
+            <span class="material-symbols-outlined search-icon">search</span>
+            <input type="text" placeholder="ค้นหาตามหมายเลขห้อง" [(ngModel)]="searchTerm"
+                (ngModelChange)="applyFilters()">
+        </div>
+    </div>
+
+    <div class="summary-section">
+        <div class="summary-card">
+            <div class="summary-info">
+                <div class="amount"><span class="number">{{overdueRoomCount}}</span> ห้อง</div>
+                <div class="label">ค้างชำระ</div>
+            </div>
+            <div class="summary-icon red-icon">
+                <span class="material-symbols-outlined">credit_card_clock</span>
+            </div>
+        </div>
+
+        <!-- Pending Approval -->
+        <div class="summary-card">
+            <div class="summary-info">
+                <div class="amount"><span class="number">{{ pendingRoomCount }}</span> ห้อง</div>
+                <div class="label">รออนุมัติ</div>
+            </div>
+            <div class="summary-icon orange-icon">
+                <span class="material-symbols-outlined">person_add</span>
+            </div>
+        </div>
+
+        <!-- Vacant -->
+
+        <div class="summary-card">
+            <div class="summary-info">
+                <div class="amount"><span class="number">{{vacantRoomCount}}</span> ห้อง</div>
+                <div class="label">ห้องว่าง</div>
+            </div>
+            <div class="summary-icon purple-icon">
+                <span class="material-symbols-outlined">door_open</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+        กำลังโหลดข้อมูล...
+    </div>
+
+    <div class="floor-section" *ngFor="let floor of filteredFloors">
+        <div class="floor-title">ชั้นที่ {{floor.number}}</div>
+        <div class="room-grid">
+            <div class="room-item" *ngFor="let room of floor.rooms">
+                <div class="room-number">{{room.room_number}}</div>
+                <div class="room-box" [ngClass]="{
+                             'vacant': room.status === 'available' && room.join_status !== 'pending',
+                             'occupied': room.status === 'occupied',
+                             'pending': room.join_status === 'pending',
+                             'pointer': true
+                         }" (click)="goToTenantDetails(room.id)">
+
+                    <!-- If Vacant and not Pending -->
+                    <span *ngIf="room.status === 'available' && room.join_status !== 'pending'">ว่าง</span>
+
+                    <!-- If Pending Approval -->
+                    <span *ngIf="room.join_status === 'pending'">รออนุมัติ</span>
+
+                    <!-- If Occupied -->
+                    <span *ngIf="room.status === 'occupied'">มีผู้เช่า</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="no-results" *ngIf="!isLoading && filteredFloors.length === 0">
+        ไม่พบข้อมูลห้องพัก
+    </div>
+</div>

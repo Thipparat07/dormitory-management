@@ -1,0 +1,91 @@
+<header class="navbar">
+  <div class="nav-container">
+    <a routerLink="/owner/dashboard" class="home-link">
+      <span class="material-symbols-outlined">home</span>
+    </a>
+
+    <!-- Hamburger Menu (Mobile Only) -->
+    <button class="menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+      <span class="material-symbols-outlined">{{ isMobileMenuOpen ? 'close' : 'menu' }}</span>
+    </button>
+
+    <div class="nav-content" [class.mobile-open]="isMobileMenuOpen">
+      <!-- Overlay to close menu when clicking outside -->
+      <div class="menu-overlay" (click)="closeMobileMenu()"></div>
+
+      <nav class="nav-links">
+        <ng-container *ngIf="dormId">
+          <a class="nav-item" (click)="featureNotReady(); closeMobileMenu()">
+            <span class="material-symbols-outlined">dashboard</span>
+            สรุปการแจ้ง
+          </a>
+          <a [routerLink]="['/owner/dormitory', dormId, 'layout']" class="nav-item"
+            [class.active]="activeTab === 'layout'" (click)="closeMobileMenu()">
+            <span class="material-symbols-outlined">grid_view</span>
+            ผังห้อง
+          </a>
+          <a class="nav-item" (click)="featureNotReady(); closeMobileMenu()">
+            <span class="material-symbols-outlined">receipt_long</span>
+            บิลค่าเช่า
+          </a>
+          <div class="nav-item-dropdown" [class.active]="isSettingsMenuOpen">
+            <div class="dropdown-trigger" (click)="toggleSettingsMenu()">
+              <span class="nav-item" [class.active]="activeTab === 'settings'">
+                <span class="material-symbols-outlined">settings</span>
+                ตั้งค่าหอพัก
+                <span class="material-symbols-outlined">arrow_drop_down</span>
+              </span>
+            </div>
+
+            <div class="dropdown-menu" *ngIf="isSettingsMenuOpen">
+              <div class="join-code-item" *ngIf="joinCode" (click)="$event.stopPropagation(); copyJoinCode()">
+                <div class="join-code-label">
+                  <span class="label">Join Code:</span>
+                  <span class="code">{{ joinCode }}</span>
+                </div>
+                <span class="material-symbols-outlined icon">content_copy</span>
+              </div>
+              <div class="menu-divider" *ngIf="joinCode"></div>
+              <div class="menu-item" [routerLink]="['/owner/dormitory', dormId, 'bank-account']"
+                (click)="closeMobileMenu()">
+                <span class="material-symbols-outlined">account_balance</span>
+                บัญชีธนาคาร
+              </div>
+              <div class="menu-item" [routerLink]="['/owner/dormitory', dormId, 'room-booking']"
+                (click)="closeMobileMenu()">
+                <span class="material-symbols-outlined">payments</span>
+                จัดการค่าเช่า
+              </div>
+              <div class="menu-item" [routerLink]="['/owner/dormitory', dormId, 'room-types']"
+                (click)="closeMobileMenu()">
+                <span class="material-symbols-outlined">category</span>
+                จัดการประเภทห้อง
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </nav>
+
+      <div class="user-profile" (click)="toggleMenu()">
+        <!-- Profile info remains essentially same, simplified for clarity -->
+        <div class="profile-circle">
+          <img *ngIf="profilePicture" [src]="profilePicture" alt="Profile" class="profile-img">
+          <span *ngIf="!profilePicture" class="material-symbols-outlined profile-icon">person</span>
+        </div>
+        <span class="user-name">{{ userName }}</span>
+        <span class="material-symbols-outlined">arrow_drop_down</span>
+
+        <div class="dropdown-menu user-dropdown" *ngIf="isMenuOpen">
+          <div class="menu-item" routerLink="/tenant/dashboard" (click)="closeMobileMenu()">
+            <span class="material-symbols-outlined">person_outline</span>
+            ผู้เช่า
+          </div>
+          <div class="menu-item logout-item" (click)="logout(); closeMobileMenu()">
+            <span class="material-symbols-outlined">logout</span>
+            ออกจากระบบ
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

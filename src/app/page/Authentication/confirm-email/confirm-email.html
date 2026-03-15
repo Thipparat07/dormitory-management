@@ -1,0 +1,18 @@
+<div class="confirm-container">
+    <div class="confirm-card">
+        <div class="icon-warning">
+            <span class="material-symbols-outlined">warning</span>
+        </div>
+        <h2>พบบัญชีเดิมในระบบ</h2>
+        <p>อีเมลที่คุณใช้ล็อกอินด้วย Google ถูกนำมาลงทะเบียนในระบบของเราเรียบร้อยแล้ว คุณต้องการเชื่อมบัญชี Google
+            นี้เข้ากับบัญชีเดิมของคุณหรือไม่?</p>
+
+        <div class="action-buttons">
+            <button class="btn-cancel" (click)="onCancel()">ยกเลิก</button>
+            <button class="btn-confirm" (click)="onConfirm()" [disabled]="isLoading">
+                <span *ngIf="!isLoading">ตกลงเชื่อมบัญชี</span>
+                <span *ngIf="isLoading" class="spinner-small"></span>
+            </button>
+        </div>
+    </div>
+</div>

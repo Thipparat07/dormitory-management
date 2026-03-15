@@ -1,21 +1,24 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { jwtDecode } from 'jwt-decode';
+import { AuthService } from '../services/api/login/auth-service';
+import { map, catchError, of } from 'rxjs';
 
 export const authGuard: CanActivateFn = () => {
     const router = inject(Router);
-    const token = localStorage.getItem('token');
+    const authService = inject(AuthService);
 
-    if (!token) return router.createUrlTree(['/login']);
-
-    try {
-        const decoded: any = jwtDecode(token);
-        if (decoded.exp * 1000 < Date.now()) {
-            localStorage.removeItem('token');
-            return router.createUrlTree(['/login']);
-        }
-        return true;
-    } catch {
-        return router.createUrlTree(['/login']);
-    }
+    return authService.checkAuthStatus().pipe(
+        map(res => {
+            if (res) {
+                localStorage.setItem('isLoggedIn', 'true');
+                return true;
+            }
+            localStorage.removeItem('isLoggedIn');
+            return router.createUrlTree(['/auth/login']);
+        }),
+        catchError(() => {
+            localStorage.removeItem('isLoggedIn');
+            return of(router.createUrlTree(['/auth/login']));
+        })
+    );
 };

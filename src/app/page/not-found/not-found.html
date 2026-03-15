@@ -1,0 +1,29 @@
+<div class="not-found-container">
+    <div class="content">
+        <div class="error-code">404</div>
+        <h1>ไม่พบหน้าที่คุณต้องการ</h1>
+        <p>ขออภัยครับ แต่ดูเหมือนว่าเส้นทางที่คุณกำลังไปนั้นไม่มีอยู่จริง หรืออาจถูกย้ายไปที่อื่นแล้ว</p>
+
+        <div class="actions">
+            <button class="btn-back" (click)='goBack()'>
+                <span class="material-symbols-outlined">arrow_back</span>
+                ย้อนกลับ
+            </button>
+            <button class="btn-home" routerLink="/">
+                <span class="material-symbols-outlined">home</span>
+                กลับหน้าหลัก
+            </button>
+        </div>
+    </div>
+
+    <div class="animation-container">
+        <!-- Visual element for 404 -->
+        <div class="ghost">
+            <div class="eyes"></div>
+            <div class="mouth"></div>
+            <div class="feet">
+                <span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+</div>

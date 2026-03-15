@@ -1,0 +1,59 @@
+<header class="navbar">
+  <div class="nav-container">
+    <a routerLink="/tenant/dashboard" class="home-link">
+      <span class="material-symbols-outlined">home</span>
+    </a>
+
+    <!-- Hamburger Menu (Mobile Only) -->
+    <button class="menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+      <span class="material-symbols-outlined">{{ isMobileMenuOpen ? 'close' : 'menu' }}</span>
+    </button>
+
+    <div class="nav-content" [class.mobile-open]="isMobileMenuOpen">
+      <!-- Overlay to close menu when clicking outside -->
+      <div class="menu-overlay" (click)="closeMobileMenu()"></div>
+
+      <nav class="nav-links" *ngIf="roomId">
+        <a [routerLink]="['/dorm-info']" [queryParams]="{room_id: roomId}" class="nav-item"
+          [class.active]="activeTab === 'info'" (click)="closeMobileMenu()">
+          <span class="material-symbols-outlined">info</span>
+          ข้อมูลหอพัก
+        </a>
+        <a [routerLink]="['/tenant/billing']" [queryParams]="{room_id: roomId}" class="nav-item"
+          [class.active]="activeTab === 'billing'" (click)="closeMobileMenu()">
+          <span class="material-symbols-outlined">receipt_long</span>
+          บิลค่าเช่า
+        </a>
+        <a [routerLink]="['/maintenance-report']" [queryParams]="{room_id: roomId}" class="nav-item"
+          [class.active]="activeTab === 'maintenance'" (click)="closeMobileMenu()">
+          <span class="material-symbols-outlined">engineering</span>
+          แจ้งเรื่อง
+        </a>
+        <a href="#" class="nav-item" (click)="featureNotReady(); closeMobileMenu()">
+          <span class="material-symbols-outlined">compare_arrows</span>
+          เปรียบเทียบ
+        </a>
+      </nav>
+
+      <div class="user-profile" (click)="toggleMenu()">
+        <div class="profile-circle">
+          <img *ngIf="profilePicture" [src]="profilePicture" alt="Profile" class="profile-img">
+          <span *ngIf="!profilePicture" class="material-symbols-outlined profile-icon">person</span>
+        </div>
+        <span class="user-name">{{ userName }}</span>
+        <span class="material-symbols-outlined">arrow_drop_down</span>
+
+        <div class="dropdown-menu user-dropdown" *ngIf="isMenuOpen">
+          <div class="menu-item" routerLink="/owner/dashboard" (click)="closeMobileMenu()">
+            <span class="material-symbols-outlined">admin_panel_settings</span>
+            เจ้าของหอพัก
+          </div>
+          <div class="menu-item logout-item" (click)="logout(); closeMobileMenu()">
+            <span class="material-symbols-outlined">logout</span>
+            ออกจากระบบ
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,160 @@
+.navbar {
+    background-color: #f13d2f;
+    color: white;
+    padding: 10px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+    font-family: 'Kanit', sans-serif;
+    height: 60px;
+
+    @media (max-width: 768px) {
+        padding: 0 20px;
+    }
+
+    .navbar-content {
+        width: 100%;
+        max-width: 800px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .bill-title {
+        font-size: 1.1rem;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 15px;
+    }
+
+    .close-btn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+        background-color: rgba(255, 255, 255, 0.15);
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .material-symbols-outlined {
+            font-size: 20px;
+        }
+    }
+}
+
+.details-container {
+    padding: 80px 5% 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    background-color: #fcfcfc;
+    min-height: 100vh;
+    box-sizing: border-box;
+    font-family: 'Kanit', sans-serif;
+
+    @media (max-width: 768px) {
+        padding: 80px 15px 30px;
+        gap: 15px;
+    }
+}
+
+.status-card, .details-table-card, .reminder-card {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.status-warning {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+
+    span {
+        font-weight: bold;
+    }
+
+    &.pending {
+        color: #ffb800;
+    }
+
+    &.overdue {
+        color: #ff4d4f;
+    }
+
+    &.paid {
+        color: #52c41a;
+    }
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    .amount-cell {
+        text-align: right;
+    }
+
+    .item-col { width: 70%; }
+    .amount-col { text-align: right; width: 30%; }
+
+    .total-row td {
+        font-weight: bold;
+        color: #f13d2f;
+    }
+}
+
+.reminder-card {
+    color: #f13d2f;
+    font-size: 0.9rem;
+}
+
+.action-btn-container {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.notify-payment-btn {
+    width: 100%;
+    max-width: 400px;
+    background-color: #32cd32;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-family: 'Kanit', sans-serif;
+}

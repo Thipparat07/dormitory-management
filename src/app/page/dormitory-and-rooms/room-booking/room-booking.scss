@@ -1,0 +1,374 @@
+/* Content Layout */
+.content-container {
+    margin-top: 60px;
+    padding: 30px 5%;
+    background-color: #fafafa;
+    min-height: calc(100vh - 60px);
+    box-sizing: border-box;
+
+    @media (min-width: 1400px) {
+        padding: 30px 15%;
+    }
+
+    @media (max-width: 768px) {
+        padding: 20px;
+        margin-top: 50px;
+    }
+}
+
+/* Page Title Section */
+.page-title-section {
+    background-color: #ccc;
+    padding: 12px;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 2px;
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.1);
+
+    h2 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 500;
+        color: #000;
+    }
+}
+
+/* Filter Section */
+.filter-section {
+    background-color: transparent;
+    margin-bottom: 40px;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 12px;
+
+    .search-box {
+        flex: 1.5;
+        position: relative;
+        background-color: white;
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px 10px 8px 35px;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            box-sizing: border-box;
+            font-size: 0.8rem;
+            outline: none;
+            color: #555;
+
+            &::placeholder {
+                color: #bbb;
+            }
+        }
+    }
+
+    .dropdown-box {
+        flex: 1;
+
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            box-sizing: border-box;
+            font-size: 0.8rem;
+            outline: none;
+            background-color: white;
+            cursor: pointer;
+            color: #333;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 1em;
+        }
+    }
+}
+
+.select-all-bar {
+    background-color: #e0e0e0;
+    padding: 10px;
+    text-align: center;
+    border-radius: 2px;
+
+    .custom-checkbox {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 0.8rem;
+        color: #444;
+
+        input {
+            margin-right: 10px;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+    }
+}
+
+/* Floor Section */
+.floor-container {
+    background-color: white;
+    padding: 0;
+    margin-bottom: 40px;
+    border: 1px solid #ddd;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    /* Match the pronounced shadow in image */
+    border-radius: 2px;
+}
+
+.floor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 25px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+
+    .floor-title {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: #555;
+    }
+
+    .floor-actions {
+        display: flex;
+        gap: 10px;
+
+        .btn {
+            padding: 6px 15px;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+
+        .btn-select-floor {
+            background-color: #28a745; // Match green button
+        }
+
+        .btn-deselect-floor {
+            background-color: #f13d2f; // Match red button
+        }
+    }
+}
+
+/* Rooms Grid */
+.rooms-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 0 30px 35px 30px;
+    justify-content: space-between;
+}
+
+.room-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(20% - 12px);
+
+    @media (max-width: 1024px) {
+        width: calc(25% - 12px);
+    }
+
+    @media (max-width: 768px) {
+        width: calc(33.33% - 10px);
+    }
+
+    @media (max-width: 480px) {
+        width: calc(50% - 10px);
+    }
+
+    .room-number {
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 6px;
+    }
+
+    .room-card {
+        background-color: #e0e0e0;
+        width: 100%;
+        height: 110px;
+        /* Taller for more info */
+        padding: 10px 10px;
+        text-align: center;
+        border-radius: 2px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+
+        &.selected {
+            background-color: #d8d8d8;
+            border: 1px solid #777;
+        }
+
+        &.occupied {
+            background-color: #ffebee;
+            border-color: #ffcdd2;
+
+            .rent-status {
+                color: #d32f2f;
+                font-weight: bold;
+            }
+        }
+
+        .rent-status {
+            font-size: 0.65rem;
+            color: #ff5252;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        .room-type-label {
+            font-size: 0.7rem;
+            color: #666;
+            margin-bottom: 2px;
+            text-align: left;
+        }
+
+        .rent-price {
+            font-size: 0.8rem;
+            color: #222;
+            font-weight: 600;
+            text-align: left;
+        }
+    }
+}
+
+.assign-action {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+
+    .btn-primary {
+        background-color: #f13d2f;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        font-family: inherit;
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        color: #333;
+    }
+}
+
+.type-list {
+    margin-bottom: 25px;
+    max-height: 300px;
+    overflow-y: auto;
+
+    .type-item {
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s;
+
+        &:hover {
+            background-color: #f9f9f9;
+        }
+
+        &.selected {
+            border-color: #f13d2f;
+            background-color: #fff5f5;
+        }
+
+        .type-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .type-price {
+            color: #f13d2f;
+            font-weight: 600;
+        }
+    }
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+
+    .btn {
+        padding: 8px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        border: none;
+    }
+
+    .btn-cancel {
+        background-color: #f5f5f5;
+        color: #666;
+    }
+
+    .btn-save {
+        background-color: #f13d2f;
+        color: white;
+    }
+}

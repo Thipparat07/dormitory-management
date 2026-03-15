@@ -1,0 +1,275 @@
+.navbar {
+  background-color: #f13d2f;
+  padding: 10px 160px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center; // Center items vertically
+
+  .nav-item {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    margin-right: 50px;
+    font-size: 1rem;
+    font-weight: 400;
+
+    &:hover,
+    &.active {
+      opacity: 1;
+      color: #ffffff;
+      font-weight: 500;
+    }
+  }
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  position: relative;
+
+  .profile-circle {
+    width: 35px;
+    height: 35px;
+    background-color: white;
+    border-radius: 50%;
+    margin-right: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .profile-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-icon {
+      color: #f13d2f;
+      font-size: 20px;
+    }
+  }
+
+  .user-name {
+    font-size: 0.9rem;
+    font-weight: 300;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+    margin-top: 10px;
+    z-index: 1000;
+    overflow: hidden;
+
+    .menu-item {
+      padding: 12px 20px;
+      color: #333;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      text-align: left;
+
+      &:hover {
+        background-color: #f5f5f5;
+        color: #f13d2f;
+      }
+    }
+  }
+}
+
+
+.join-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding-top: 120px; // Increased to accommodate fixed navbar
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+  box-sizing: border-box;
+
+  .header-text {
+    text-align: center;
+    margin-bottom: 40px;
+
+    h1 {
+      font-size: 2.2rem; // Increased from 1.8rem
+      font-weight: 500;
+      color: #333;
+      margin: 0 0 10px 0;
+    }
+
+    p {
+      font-size: 1.25rem; // Increased from 1.1rem
+      color: #666;
+      margin: 0;
+    }
+  }
+
+  .form-card {
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); // Subtle drop shadow as in image
+    width: 100%;
+    max-width: 600px;
+    min-height: 400px; // Give the card some height
+    padding: 60px 40px; // Increased padding
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .dorm-info {
+      width: 100%;
+      max-width: 350px;
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 25px;
+      border-left: 4px solid #f13d2f;
+      box-sizing: border-box;
+
+      p {
+        margin: 5px 0;
+        font-size: 0.95rem;
+        color: #333;
+        text-align: left;
+      }
+    }
+
+    .input-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center; // Center label above input
+      margin-bottom: 5px; // Reduced to accommodate error messages
+
+      label {
+        font-size: 1.05rem;
+        color: #555;
+        margin-bottom: 12px;
+        width: 100%;
+        max-width: 350px; // Align label with input
+        text-align: left; // Keep label aligned to the left of the input box
+      }
+
+      input,
+      select {
+        width: 100%;
+        max-width: 350px; // Restrict input width
+        padding: 12px 18px; // Slightly larger padding
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem; // Larger input font
+        color: #333;
+        outline: none;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+        background-color: white; // Ensure consistent background
+
+        &::placeholder {
+          color: #bbb;
+        }
+
+        &:focus {
+          border-color: #2196f3;
+        }
+
+        &.invalid {
+          border-color: #f13d2f !important;
+          background-color: #fff8f8;
+        }
+      }
+
+      .required-star {
+        color: #f13d2f;
+        margin-left: 2px;
+        font-weight: bold;
+      }
+
+      .input-info {
+        min-height: 20px;
+        margin-top: 4px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 350px;
+
+        .error-message {
+          color: #f13d2f;
+          font-size: 0.8rem;
+          font-weight: 400;
+          text-align: left;
+        }
+
+        .error-placeholder {
+          height: 1px;
+        }
+      }
+
+      /* Custom Select Wrapper for Material Icon */
+      .select-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 350px;
+
+        select {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none; // Remove default browser arrow
+          padding-right: 40px; // Make space for icon
+          cursor: pointer;
+          max-width: 100%; // Fill wrapper
+        }
+
+        .dropdown-icon {
+          position: absolute;
+          right: 15px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #555;
+          pointer-events: none; // Click passes through to select
+        }
+      }
+    }
+
+    .btn-confirm {
+      width: 100%;
+      max-width: 400px;
+      padding: 16px;
+      margin-top: 20px;
+      background-color: #32cd32;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.15rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}

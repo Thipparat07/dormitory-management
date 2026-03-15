@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Constants {
-  public readonly API_ENDPOINT: string = 'https://project-backend-dormitory.vercel.app';
+  public readonly API_ENDPOINT: string = environment.apiEndpoint;
 }

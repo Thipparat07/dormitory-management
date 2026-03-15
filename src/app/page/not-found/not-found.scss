@@ -1,0 +1,200 @@
+.not-found-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5;
+    font-family: 'Kanit', sans-serif;
+    color: #333;
+    overflow: hidden;
+    padding: 20px;
+    text-align: center;
+
+    .content {
+        z-index: 2;
+        margin-bottom: 50px;
+
+        .error-code {
+            font-size: 150px;
+            font-weight: 800;
+            color: #f13d2f;
+            line-height: 1;
+            margin-bottom: 20px;
+            text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.05);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 500px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+
+            button {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 30px;
+                border-radius: 50px;
+                font-size: 1.1rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: none;
+                font-family: 'Kanit', sans-serif;
+
+                span {
+                    font-size: 20px;
+                }
+            }
+
+            .btn-back {
+                background-color: white;
+                color: #333;
+                border: 2px solid #ddd;
+
+                &:hover {
+                    background-color: #f0f0f0;
+                    border-color: #ccc;
+                    transform: translateY(-2px);
+                }
+            }
+
+            .btn-home {
+                background-color: #f13d2f;
+                color: white;
+                box-shadow: 0 10px 20px rgba(241, 61, 47, 0.2);
+
+                &:hover {
+                    background-color: #d32f2f;
+                    transform: translateY(-2px);
+                    box-shadow: 0 15px 30px rgba(241, 61, 47, 0.3);
+                }
+            }
+        }
+    }
+
+    .animation-container {
+        position: relative;
+        height: 200px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Ghost Animation */
+    .ghost {
+        width: 100px;
+        height: 120px;
+        background-color: white;
+        border-radius: 50px 50px 0 0;
+        position: relative;
+        animation: float 3s ease-in-out infinite;
+        box-shadow: 0 25px 30px rgba(0, 0, 0, 0.1);
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 15px;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 50%;
+            filter: blur(5px);
+        }
+
+        .eyes {
+            display: flex;
+            justify-content: space-between;
+            width: 40px;
+            position: absolute;
+            top: 40px;
+            left: 30px;
+
+            &::before,
+            &::after {
+                content: '';
+                width: 10px;
+                height: 10px;
+                background-color: #333;
+                border-radius: 50%;
+            }
+        }
+
+        .mouth {
+            width: 15px;
+            height: 15px;
+            border-bottom: 3px solid #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 55px;
+            left: 42.5px;
+        }
+
+        .feet {
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 100%;
+            display: flex;
+
+            span {
+                flex: 1;
+                height: 20px;
+                background-color: white;
+                border-radius: 0 0 15px 15px;
+            }
+        }
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@media (max-width: 600px) {
+    .not-found-container {
+        .content {
+            .error-code {
+                font-size: 100px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .actions {
+                flex-direction: column;
+
+                button {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,205 @@
+.layout-container {
+    padding: 100px 5% 40px 5%;
+    /* offset for fixed navbar */
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Kanit', sans-serif;
+    background-color: #fff;
+    /* matching general page background if any */
+    min-height: 100vh;
+    box-sizing: border-box;
+
+    @media (min-width: 1400px) {
+        padding: 100px 160px 40px 160px;
+    }
+
+    @media (max-width: 768px) {
+        padding: 80px 20px 20px 20px;
+    }
+}
+
+.search-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px 15px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        .search-icon {
+            color: #bbb;
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 1rem;
+            color: #333;
+            font-family: 'Kanit', sans-serif;
+
+            &::placeholder {
+                color: #bbb;
+            }
+        }
+    }
+}
+
+.summary-section {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+        gap: 15px;
+    }
+
+    .summary-card {
+        background: white;
+        border: 1px solid #eee;
+        padding: 20px 30px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 200px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+        .summary-info {
+            .amount {
+                font-size: 1.1rem;
+                color: #333;
+
+                .number {
+                    font-weight: bold;
+                    font-size: 1.2rem;
+                }
+            }
+
+            .label {
+                font-size: 0.9rem;
+                color: #666;
+                margin-top: 5px;
+            }
+        }
+
+        .summary-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .material-symbols-outlined {
+                font-size: 2.8rem;
+            }
+
+            &.red-icon {
+                color: #f13d2f;
+
+                .time-badge {
+                    position: absolute;
+                    bottom: -5px;
+                    right: -5px;
+                    font-size: 1.2rem;
+                    background: white;
+                    border-radius: 50%;
+                    color: #f13d2f;
+                }
+            }
+
+            &.purple-icon {
+                color: #6a1b9a;
+            }
+
+            &.orange-icon {
+                color: #ffa500;
+            }
+        }
+    }
+}
+
+.floor-section {
+    background: white;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+
+    .floor-title {
+        padding: 15px 20px;
+        border-bottom: 1px solid #eee;
+        font-size: 1.1rem;
+        color: #555;
+        font-weight: 500;
+    }
+
+    .room-grid {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        padding: 30px 20px;
+        flex-wrap: wrap;
+
+        .room-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100px;
+
+            .room-number {
+                font-size: 0.95rem;
+                color: #666;
+                margin-bottom: 10px;
+            }
+
+            .room-box {
+                width: 90px;
+                height: 90px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                font-size: 0.9rem;
+                color: #333;
+                cursor: default;
+
+                &.pointer {
+                    cursor: pointer;
+                }
+
+                &.vacant {
+                    background-color: #dcdcdc;
+                    color: #555;
+                }
+
+                &.pending {
+                    background-color: #fff3e0;
+                    border: 2px solid #ffa500;
+                    color: #ef6c00;
+                    font-weight: 500;
+                }
+
+                &.occupied {
+                    background-color: #e8f5e9;
+                    border: 2px solid #4caf50;
+                    color: #2e7d32;
+                    font-weight: 500;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+        }
+    }
+}

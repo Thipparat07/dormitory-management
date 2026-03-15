@@ -1,0 +1,159 @@
+<app-header [roomId]="roomId" activeTab="maintenance"></app-header>
+
+<div class="main-container">
+    <div class="header-box">
+        รายการแจ้งทั้งหมด
+    </div>
+
+    <div class="add-report-wrapper">
+        <button class="add-report-btn" (click)="toggleAddReportMenu()">
+            เพิ่มรายการแจ้ง
+        </button>
+        <div class="dropdown-menu" *ngIf="isAddReportMenuOpen">
+            <div class="menu-item" (click)="openAddReportModal()">
+                แจ้งซ่อม
+            </div>
+        </div>
+    </div>
+
+    <div class="report-list">
+        <div class="report-card" *ngFor="let report of reports">
+            <div class="report-icon">
+                <img src="assets/image/removebg.png" alt="members">
+            </div>
+            <div class="report-details">
+                <div class="report-header">
+                    <span class="room-info">{{ report.room }}</span>
+                    <span class="status-badge" [ngClass]="report.status">
+                        {{ report.statusText }}
+                    </span>
+                </div>
+                <div class="report-title">
+                    {{ report.title }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Report Modal -->
+<div class="modal-overlay" *ngIf="isAddReportModalOpen">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>แจ้งซ่อม</h2>
+            <button class="close-btn" (click)="closeAddReportModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="reportSubject">เรื่องที่แจ้ง</label>
+                <input type="text" class="form-control" id="reportSubject" title="เรื่องที่แจ้ง" #subjectInput />
+            </div>
+            <div class="form-group">
+                <label for="reportDetails">รายละเอียด</label>
+                <textarea class="form-control" rows="4" id="reportDetails" title="รายละเอียด" #detailsInput></textarea>
+            </div>
+            <div class="form-group">
+                <label class="d-flex align-items-center mb-0 image-label">
+                    รูปภาพ
+                    <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden
+                        title="เลือกรูปภาพ">
+                    <button class="upload-btn with-margin" (click)="fileInput.click()">
+                        <span class="material-symbols-outlined">image</span>
+                        เพิ่มรูปภาพ
+                    </button>
+                </label>
+                <div class="image-preview-box" *ngIf="selectedImage">
+                    <img [src]="selectedImage" alt="Preview" class="preview-img">
+                    <span class="material-symbols-outlined close-icon" (click)="removeImage()">close</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="submit-btn"
+                (click)="submitReport(subjectInput.value, detailsInput.value)">เพิ่มการแจ้งเรื่อง</button>
+        </div>
+    </div>
+</div>
+
+<!-- Report Detail Modal -->
+<div class="modal-overlay" *ngIf="isDetailModalOpen && detailModalData">
+    <div class="modal-content detail-modal">
+        <div class="modal-header">
+            <h2>
+                <span *ngIf="isEditMode">แก้ไข </span>{{ detailModalData.room }}
+            </h2>
+            <button class="close-btn" (click)="closeDetailModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="modal-body p-0">
+            <table class="detail-table">
+                <tbody>
+                    <tr>
+                        <td class="label-col">เรื่องที่แจ้ง</td>
+                        <td>
+                            <ng-container *ngIf="!isEditMode">{{ detailModalData.subject }}</ng-container>
+                            <input *ngIf="isEditMode" type="text" class="form-control"
+                                [(ngModel)]="detailModalData.subject" title="เรื่องที่แจ้ง">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">รายละเอียด</td>
+                        <td>
+                            <ng-container *ngIf="!isEditMode">{{ detailModalData.details }}</ng-container>
+                            <textarea *ngIf="isEditMode" class="form-control" rows="3"
+                                [(ngModel)]="detailModalData.details" title="รายละเอียด"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">รูปภาพ</td>
+                        <td>
+                            <div class="detail-image-box" *ngIf="detailModalData.image && !isEditMode">
+                                <img [src]="detailModalData.image" alt="Report Image">
+                            </div>
+                            <div class="detail-image-placeholder" *ngIf="!detailModalData.image && !isEditMode">
+                            </div>
+
+                            <div class="edit-image-upload" *ngIf="isEditMode" (click)="editFileInput.click()">
+                                <input type="file" #editFileInput
+                                    (change)="onFileSelected($event); detailModalData.image = selectedImage"
+                                    accept="image/*" hidden title="อัพโหลดรูปภาพ">
+                                <span class="material-symbols-outlined upload-icon">upload</span>
+                                <span>อัพโหลดรูปภาพ</span>
+                                <img *ngIf="detailModalData.image" [src]="detailModalData.image" alt="Preview"
+                                    class="edit-preview-img">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">สถานะ</td>
+                        <td class="status-warning">{{ detailModalData.status }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">วันที่แจ้ง</td>
+                        <td>{{ detailModalData.date }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">แจ้งโดย</td>
+                        <td>
+                            <div class="reporter-info">
+                                <div class="reporter-avatar"></div>
+                                <div class="reporter-details">
+                                    <div class="reporter-name">{{ detailModalData.reportedBy.name }}</div>
+                                    <div class="reporter-room">{{ detailModalData.reportedBy.room }}</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button *ngIf="!isEditMode" class="edit-btn" (click)="editReport()">แก้ไข</button>
+            <button *ngIf="isEditMode" class="cancel-btn" (click)="cancelEdit()">ยกเลิก</button>
+            <button *ngIf="isEditMode" class="submit-btn" (click)="saveEdit()">ยืนยัน</button>
+        </div>
+    </div>
+</div>

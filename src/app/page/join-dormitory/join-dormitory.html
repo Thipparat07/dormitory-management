@@ -1,0 +1,93 @@
+<header class="navbar">
+  <div class="nav-links">
+    <div class="user-profile" (click)="toggleMenu()">
+      <div class="profile-circle">
+        <img *ngIf="profilePicture" [src]="profilePicture" alt="Profile" class="profile-img">
+        <span *ngIf="!profilePicture" class="material-symbols-outlined profile-icon">person</span>
+      </div>
+      <span class="user-name">{{ userName }}</span>
+      <span class="material-symbols-outlined">arrow_drop_down</span>
+
+      <div class="dropdown-menu" *ngIf="isMenuOpen">
+        <div class="menu-item" routerLink="/owner/dashboard">
+          เจ้าของหอพัก
+        </div>
+        <div class="menu-item" (click)="logout()">
+          ออกจากระบบ
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="join-container">
+  <!-- Header Text -->
+  <div class="header-text">
+    <h1>เชื่อมต่อหอพัก</h1>
+    <p>โปรดกรอกรหัสหอพักของคุณ</p>
+  </div>
+
+  <!-- Form Card -->
+  <div class="form-card">
+    <!-- Dorm Code Input -->
+    <div class="input-group">
+      <label for="dormCode">รหัสหอพัก <span class="required-star">*</span></label>
+      <input type="text" id="dormCode" name="dormCode" placeholder="กรอกรหัสหอพัก" title="รหัสหอพัก"
+        [(ngModel)]="joinCode" (ngModelChange)="fetchJoinInfo()"
+        [class.invalid]="isSubmitted && !joinCode">
+      <div class="input-info">
+        <div *ngIf="isSubmitted && !joinCode" class="error-message">
+          กรุณากรอกรหัสหอพัก
+        </div>
+        <div *ngIf="!(isSubmitted && !joinCode)" class="error-placeholder"></div>
+      </div>
+    </div>
+
+    <!-- Dormitory Info -->
+    <div class="dorm-info" *ngIf="dormitoryInfo">
+      <p><strong>หอพัก:</strong> {{dormitoryInfo.dormitory.name}}</p>
+      <p><strong>ที่อยู่:</strong> {{dormitoryInfo.dormitory.address}}</p>
+    </div>
+
+    <!-- Floor Input -->
+    <div class="input-group">
+      <label for="floor">ชั้น <span class="required-star">*</span></label>
+      <div class="select-wrapper">
+        <select id="floor" name="floor" title="ชั้น" [(ngModel)]="selectedFloor" (ngModelChange)="onFloorChange()"
+          [class.invalid]="isSubmitted && (selectedFloor === null || selectedFloor === undefined)">
+          <option [ngValue]="null" disabled selected>เลือกชั้น</option>
+          <option *ngFor="let floor of floors" [ngValue]="floor">{{floor}}</option>
+        </select>
+        <span class="material-symbols-outlined dropdown-icon">keyboard_arrow_down</span>
+      </div>
+      <div class="input-info">
+        <div *ngIf="isSubmitted && (selectedFloor === null || selectedFloor === undefined)" class="error-message">
+          กรุณาเลือกชั้น
+        </div>
+        <div *ngIf="!(isSubmitted && (selectedFloor === null || selectedFloor === undefined))" class="error-placeholder"></div>
+      </div>
+    </div>
+
+    <!-- Room Select -->
+    <div class="input-group">
+      <label for="room">ห้อง <span class="required-star">*</span></label>
+      <div class="select-wrapper">
+        <select id="room" name="room" title="ห้อง" [(ngModel)]="selectedRoomId"
+          [class.invalid]="isSubmitted && !selectedRoomId">
+          <option [ngValue]="null" disabled selected>เลือกห้อง</option>
+          <option *ngFor="let room of filteredRooms" [ngValue]="room.id">{{room.room_number}}</option>
+        </select>
+        <span class="material-symbols-outlined dropdown-icon">keyboard_arrow_down</span>
+      </div>
+      <div class="input-info">
+        <div *ngIf="isSubmitted && !selectedRoomId" class="error-message">
+          กรุณาเลือกห้อง
+        </div>
+        <div *ngIf="!(isSubmitted && !selectedRoomId)" class="error-placeholder"></div>
+      </div>
+    </div>
+
+
+    <!-- Confirm Button -->
+    <button class="btn-confirm" (click)="onJoin()">ยืนยัน</button>
+  </div>
+</div>

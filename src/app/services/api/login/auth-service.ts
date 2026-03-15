@@ -17,7 +17,34 @@ export class AuthService {
     );
   }
 
+  register(email: string, phone: string, password: string) {
+    return this.http.post(
+      this.constants.API_ENDPOINT + '/api/auth/register',
+      { email, phone, password }
+    );
+  }
+
+  logout() {
+    return this.http.post(
+      this.constants.API_ENDPOINT + '/api/auth/logout',
+      {}
+    );
+  }
+
   loginWithGoogle() {
     window.location.href = this.constants.API_ENDPOINT + '/api/auth/google';
+  }
+
+  checkAuthStatus() {
+    return this.http.get(
+      this.constants.API_ENDPOINT + '/api/auth/me'
+    );
+  }
+
+  confirmGoogleLink(token: string) {
+    return this.http.post(
+      this.constants.API_ENDPOINT + '/api/auth/google/link-confirm',
+      { token }
+    );
   }
 }

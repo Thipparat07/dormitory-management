@@ -1,0 +1,68 @@
+<app-header activeTab="dashboard"></app-header>
+
+<div class="main-container">
+    <!-- Show Loading state -->
+    <div *ngIf="isLoading" class="loading-state">
+        <p>กำลังโหลดข้อมูล...</p>
+    </div>
+
+    <ng-container *ngIf="!isLoading">
+        <div class="dorm-card">
+            <div class="card-banner">
+                <div class="banner-text">
+                    <span class="highlight">สำหรับ</span>
+                    <p>สมาชิกหอพัก</p>
+                </div>
+                <div class="banner-img">
+                    <img src="assets/image/preview.png" alt="members">
+                </div>
+            </div>
+
+            <div class="dorm-list-container">
+                <!-- ส่วนหอพักปัจจุบัน -->
+                <div class="section-title" *ngIf="activeDormitories.length > 0">
+                    <h3>หอพักของคุณ</h3>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="dorm-item" *ngFor="let dorm of activeDormitories" 
+                    (click)="onDormClick(dorm)"
+                    [class.disabled]="dorm.join_status === 'pending'">
+                    <div class="info-section">
+                        <div class="name-status-wrapper">
+                            <h2 class="dorm-name">{{ dorm.name }} (ห้อง {{ dorm.room_number }})</h2>
+                            <span class="status-badge" [ngClass]="{
+                                    'status-pending': dorm.join_status === 'pending', 
+                                    'status-approved': dorm.join_status === 'approved'
+                                }">
+                                {{ dorm.join_status === 'pending' ? 'รอยืนยัน' : 'อนุมัติแล้ว' }}
+                            </span>
+                        </div>
+                        <p class="dorm-address">{{ dorm.address }}</p>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-outline">
+                            <span class="material-symbols-outlined icon-red">description</span> บิลค่าเช่า
+                        </button>
+                        <button class="btn-outline">
+                            <span class="material-symbols-outlined icon-red">campaign</span> แจ้งเรื่อง
+                        </button>
+                    </div>
+                </div>
+
+                <!-- กรณีไม่มีข้อมูลเลย -->
+                <div class="empty-dorm" *ngIf="activeDormitories.length === 0">
+                    <span class="material-symbols-outlined empty-icon">home_work</span>
+                    <p>คุณยังไม่ได้เชื่อมต่อกับหอพักใดๆ</p>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button class="btn-connect" (click)="goToAddDormitory()">
+                    เชื่อมต่อหอพักเพิ่ม
+                </button>
+            </div>
+        </div>
+    </ng-container>
+</div>

@@ -1,7 +1,59 @@
+// --- Responsive System ---
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
+$large-desktop: 1200px;
+
+$padding-mobile: 15px;
+$padding-tablet: 30px;
+$padding-desktop: 5%;
+$padding-large: 160px;
+
+@mixin mobile {
+    @media (max-width: #{$mobile}) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (max-width: #{$tablet}) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (max-width: #{$desktop}) {
+        @content;
+    }
+}
+
+.app-container {
+    padding-left: $padding-large;
+    padding-right: $padding-large;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media (max-width: $large-desktop) {
+        padding-left: $padding-tablet * 2;
+        padding-right: $padding-tablet * 2;
+    }
+
+    @include tablet {
+        padding-left: $padding-tablet;
+        padding-right: $padding-tablet;
+    }
+
+    @include mobile {
+        padding-left: $padding-mobile;
+        padding-right: $padding-mobile;
+    }
+}
+
 html,
 body {
     margin: 0;
     height: 100%;
     background-color: #f5f7fa;
+    font-family: 'Kanit', sans-serif;
     /* สีระบบหลังบ้าน */
 }
